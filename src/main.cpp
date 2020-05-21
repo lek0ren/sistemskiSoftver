@@ -3,73 +3,25 @@
 #include <regex>
 #include <string.h>
 #include <stdio.h>
+#include "../h/assembler.h"
+#include "../h/util.h"
 
-std::regex label("[/w]+:");
-
-class Token
+int main(int argc, char *argv[])
 {
-private:
-    std::string token;
-
-    enum type {
-        INSTR = 1,
-        LABEL,
-        LITERAL,
-        SIMBOL,
-        REGVAL,
-        MEMREGVAL,
-        MEMVALWITHREG
-    };
-
-public:
-    Token(std::string token) : token(token) {}
-
-    Token(char *string) {
-        token = std::string(string);
-    }
-
-    std::string getToken()
+    
+    if (argc < 2)
     {
-        return token;
+        std::cout << "Nema dovoljno argumenata"<< std::endl;
     }
-};
-
-char *stringToCharArray(std::string string, char *array)
-{
-    strcpy(array, string.c_str());
-    return array;
-}
-
-
-
-int main()
-{
-    std::ifstream in("kod.s");
-
-    if (!in)
+    else
     {
-        std::cout << "Cannot open input file.\n";
-    }
+        char *inputFIle = argv[1];
+        bool ok = Assembler::instance().setInputFile(inputFIle);
 
-    std::string line;
 
-    char *array = (char *)std::malloc(255 * sizeof(char));
-
-    while (std::getline(in, line))
-    {
-        //replace starting offset with nothing
-        //std::cout << line << std::endl;
-        char *token = strtok(stringToCharArray(line, array), " ,\n\t");
-        std::vector<Token> instruction;
-
-        while (token)
-        {
-            Token t(token);
-            instruction.push_back(t);
-            std::cout << t.getToken() << std::endl;
-            token = strtok(nullptr, " ,\n\t");
+        if(ok){
+            Assembler::instance().assembly();
         }
     }
-    in.close();
     return 0;
 }

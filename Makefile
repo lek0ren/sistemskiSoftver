@@ -14,12 +14,12 @@ $(OUTPUT): $(OBJ_FILES) | $(BUILD_DIR) $(OBJ_DIR)
 	g++ $(OBJ_FILES) -o $(OUTPUT)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR) $(OBJ_DIR)
-	g++ -c -o $@ $<
+	g++ -c -o $@ $< 
 
-$(BUILD_DIR): | $(OBJ_DIR)
+$(OBJ_DIR): | $(BUILD_DIR)
 	mkdir $(@)
 
-$(OBJ_DIR): 
+$(BUILD_DIR): 
 	mkdir $(@)
 
 clean : 

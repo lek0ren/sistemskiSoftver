@@ -1,7 +1,7 @@
 .global a
 .extern b
 
-.text
+.section text:
 .equ a , b
 mov eax,b
 iret
@@ -23,7 +23,7 @@ pushw %r1
 
            c: .byte 2
 
-.data
+.section data:
 a: .long 8
 
 .end
