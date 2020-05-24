@@ -1,0 +1,294 @@
+{
+    "extension": "linecounter",
+    "version": "0.2.7",
+    "workspace": "/home/veljko/Documents/sis/projekat/sistemskiSoftver",
+    "linecount": [
+        {
+            "version": "0.2.7",
+            "counttime": "2020-05-24 14:54:42",
+            "filesum": 38,
+            "codesum": 4939,
+            "commentsum": 31,
+            "blanksum": 108,
+            "statistics": {
+                "": {
+                    "code": 32,
+                    "comment": 21,
+                    "blank": 7
+                },
+                ".s": {
+                    "code": 25,
+                    "comment": 0,
+                    "blank": 4
+                },
+                ".cpp": {
+                    "code": 359,
+                    "comment": 10,
+                    "blank": 48
+                },
+                ".h": {
+                    "code": 146,
+                    "comment": 0,
+                    "blank": 49
+                },
+                ".md": {
+                    "code": 1,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".mdj": {
+                    "code": 4376,
+                    "comment": 0,
+                    "blank": 0
+                }
+            },
+            "filelist": [
+                {
+                    "blank": 6,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": ".gitignore"
+                },
+                {
+                    "filename": "build/obj/assembler.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/main.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/regexes.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/section.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/symbol.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/symTable.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/util.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/output",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/GCC.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/gdb.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/GNU_asembler.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/KonstrukcijaAsemblera.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/V3_Konstrukcija_asemblera.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/V3a_elf.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/x86_64_asembler1.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/x86_64_asembler2.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/x86_64_asembler3.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 12,
+                    "code": 39,
+                    "comment": 0,
+                    "filename": "h/assembler.h"
+                },
+                {
+                    "blank": 1,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "h/label.h"
+                },
+                {
+                    "blank": 1,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "h/regexes.h"
+                },
+                {
+                    "blank": 5,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "h/section.h"
+                },
+                {
+                    "blank": 16,
+                    "code": 37,
+                    "comment": 0,
+                    "filename": "h/symbol.h"
+                },
+                {
+                    "blank": 9,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "h/symTable.h"
+                },
+                {
+                    "blank": 2,
+                    "code": 13,
+                    "comment": 0,
+                    "filename": "h/Token.h"
+                },
+                {
+                    "blank": 3,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "h/util.h"
+                },
+                {
+                    "blank": 4,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "kod.s"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 21,
+                    "filename": "Makefile"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "README.md"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "run"
+                },
+                {
+                    "blank": 0,
+                    "code": 4376,
+                    "comment": 0,
+                    "filename": "shema.mdj"
+                },
+                {
+                    "blank": 18,
+                    "code": 184,
+                    "comment": 9,
+                    "filename": "src/assembler.cpp"
+                },
+                {
+                    "blank": 4,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "src/main.cpp"
+                },
+                {
+                    "blank": 2,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "src/regexes.cpp"
+                },
+                {
+                    "blank": 2,
+                    "code": 13,
+                    "comment": 0,
+                    "filename": "src/section.cpp"
+                },
+                {
+                    "blank": 14,
+                    "code": 69,
+                    "comment": 0,
+                    "filename": "src/symbol.cpp"
+                },
+                {
+                    "blank": 6,
+                    "code": 53,
+                    "comment": 1,
+                    "filename": "src/symTable.cpp"
+                },
+                {
+                    "blank": 2,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "src/util.cpp"
+                }
+            ]
+        }
+    ]
+}

@@ -10,7 +10,7 @@ private:
     std::shared_ptr<std::vector<std::string>> code;
 
 public:
-    Section(std::string name, int off, std::shared_ptr<Section> s);
+    Section(std::string name, int off, int &s);
 
     void setSize(int s)
     {
@@ -18,4 +18,6 @@ public:
     }
 
     void appendCode(std::vector<std::string> opCode);
+
+    friend std::ostream &operator<<(std::ostream &output, const Section &s);
 };

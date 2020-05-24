@@ -8,7 +8,7 @@ class Section;
 
 class Symbol
 {
-private:
+protected:
     struct STForwartRefs
     {
         int patch;
@@ -18,32 +18,36 @@ private:
     int num;
     bool local;
     std::string name;
-    std::shared_ptr<Section> section;
+    int *section;
     bool defined;
     STForwartRefs *flink;
 
 public:
-    Symbol(std::string name, int off, std::shared_ptr<Section> s);
+    Symbol(std::string name, int off, int &s);
 
-    void setToGlobal()
-    {
-        local = false;
-    }
+    void setToGlobal();
 
-    void setNumber(int num)
-    {
-        this->num = num;
-    }
+    void setNumber(int num);
 
-    void setDefined()
-    {
-        defined = true;
-    }
+    void setDefined();
 
-    std::string getName() const
-    {
-        return name;
-    }
+    void setOffset(int off);
+
+    void setName(std::string name);
+
+    void setSection(int &s);
+
+    std::string getName() const;
+
+    int &getNumber();
+
+    bool getDefined();
+
+    int getOffset();
+
+    std::string getName();
+
+    int &getSection();
 
     friend std::ostream &operator<<(std::ostream &output, const Symbol &s);
 };

@@ -1,5 +1,5 @@
 .global a
-.extern b
+.extern b, d
 
 .section text:
 .equ a , b

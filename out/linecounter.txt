@@ -1,0 +1,60 @@
+===============================================================================
+EXTENSION NAME : linecounter
+EXTENSION VERSION : 0.2.7
+-------------------------------------------------------------------------------
+count time : 2020-05-24 14:54:42
+count workspace : /home/veljko/Documents/sis/projekat/sistemskiSoftver
+total files : 38
+total code lines : 4939
+total comment lines : 31
+total blank lines : 108
+
+    statistics
+   |      extension|     total code|  total comment|    total blank|percent|
+   -------------------------------------------------------------------------
+   |               |             32|             21|              7|   0.65|
+   |             .s|             25|              0|              4|   0.51|
+   |           .cpp|            359|             10|             48|    7.3|
+   |             .h|            146|              0|             49|    3.0|
+   |            .md|              1|              0|              0|  0.020|
+   |           .mdj|           4376|              0|              0|     89|
+   -------------------------------------------------------------------------
+.gitignore, code is 26, comment is 0, blank is 6.
+build/obj/assembler.o, it is a binary file.
+build/obj/main.o, it is a binary file.
+build/obj/regexes.o, it is a binary file.
+build/obj/section.o, it is a binary file.
+build/obj/symbol.o, it is a binary file.
+build/obj/symTable.o, it is a binary file.
+build/obj/util.o, it is a binary file.
+build/output, it is a binary file.
+dokumentacija/GCC.pdf, it is a binary file.
+dokumentacija/gdb.pdf, it is a binary file.
+dokumentacija/GNU_asembler.pdf, it is a binary file.
+dokumentacija/KonstrukcijaAsemblera.pdf, it is a binary file.
+dokumentacija/V3_Konstrukcija_asemblera.pdf, it is a binary file.
+dokumentacija/V3a_elf.pdf, it is a binary file.
+dokumentacija/x86_64_asembler1.pdf, it is a binary file.
+dokumentacija/x86_64_asembler2.pdf, it is a binary file.
+dokumentacija/x86_64_asembler3.pdf, it is a binary file.
+h/assembler.h, code is 39, comment is 0, blank is 12.
+h/label.h, code is 2, comment is 0, blank is 1.
+h/regexes.h, code is 9, comment is 0, blank is 1.
+h/section.h, code is 18, comment is 0, blank is 5.
+h/symbol.h, code is 37, comment is 0, blank is 16.
+h/symTable.h, code is 24, comment is 0, blank is 9.
+h/Token.h, code is 13, comment is 0, blank is 2.
+h/util.h, code is 4, comment is 0, blank is 3.
+kod.s, code is 25, comment is 0, blank is 4.
+Makefile, code is 5, comment is 21, blank is 1.
+README.md, code is 1, comment is 0, blank is 0.
+run, code is 1, comment is 0, blank is 0.
+shema.mdj, code is 4376, comment is 0, blank is 0.
+src/assembler.cpp, code is 184, comment is 9, blank is 18.
+src/main.cpp, code is 23, comment is 0, blank is 4.
+src/regexes.cpp, code is 8, comment is 0, blank is 2.
+src/section.cpp, code is 13, comment is 0, blank is 2.
+src/symbol.cpp, code is 69, comment is 0, blank is 14.
+src/symTable.cpp, code is 53, comment is 1, blank is 6.
+src/util.cpp, code is 9, comment is 0, blank is 2.
+===============================================================================
