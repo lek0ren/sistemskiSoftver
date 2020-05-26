@@ -3,19 +3,19 @@
 
 .section text:
 .equ a , b
-mov eax,b
 iret
 halt
 push $56
-pop simbol
+pop $simbol
 pop %r5
-push (%r7)
+push 1000(%r6)
 pop %r5l
 pop %r5h
 push (%r2)
-jmp *%r2
+jmp *%r2l
 call labela
-jmp 54
+jmp 256
+add a, (%r2)
 jeq *54
 jne *(%r6)
 jgt *simbol(%r2)

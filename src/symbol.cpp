@@ -4,7 +4,7 @@
 
 std::ostream &operator<<(std::ostream &output, const Symbol &s)
 {
-    output << s.getName() << "\t" << *s.section << "\t" << s.offset << "\t" << (s.local ? "l" : "g") << "\t" << s.num << "\t" << s.defined << std::endl;
+    output << s.getName() << "\t|" << *s.section << "\t|" << s.offset << "\t|" << (s.local ? "l" : "g") << "\t|" << s.num << "\t|" << s.defined << std::endl;
     return output;
 }
 
@@ -14,7 +14,6 @@ Symbol::Symbol(std::string name, int off, int &s)
     std::regex_match(name, match_name, reg_labelWout);
     this->name = match_name.str(1);
     offset = off;
-    std::cout << "Section " << s << std::endl;
     section = s == -1 ? &num : &s;
     this->num = 0;
     defined = false;

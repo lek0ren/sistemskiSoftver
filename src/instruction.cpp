@@ -1,5 +1,9 @@
 #include "../h/instruction.h"
+#include "../h/regexes.h"
+#include "../h/Token.h"
 #include <map>
+#include <regex>
+#include <iostream>
 
 Instruction::InstructionOpNum Instruction::InstructionOpNum_ = {
     {"halt", 0},
@@ -60,8 +64,64 @@ int Instruction::getSize()
     return size;
 }
 
-Instruction::Instruction(std::string name, int num, std::shared_ptr<std::vector<Token>> tokens)
+Instruction::Instruction(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>> tokens)
 {
-    numOfOp = num;
+    std::smatch match_name;
+    opSize = 2;
+
+    if (std::regex_match(name, match_name, reg_oneOpInstr) || std::regex_match(name, match_name, reg_twoOpInstr))
+    {
+        name = match_name[1].str();
+        if (match_name[2].str() == "b")
+            opSize = 1;
+    }
+
     size = InstructionCode_[name];
+    numOfOp = InstructionOpNum_[name];
+
+    /*if (std::regex_match(name, match_name, reg_oneOpInstr))
+    {
+        if (match_name[2].str() == "b")
+            opSize = 1;
+    }
+
+    if (std::regex_match(name, match_name, reg_twoOpInstr))
+    {
+        if (match_name[2].str() == "b")
+            opSize = 1;
+    }*/
+
+    operands = std::make_shared<std::vector<Operand>>();
+
+    if (tokens->size() == numOfOp)
+    {
+        for (auto &tok : *tokens)
+        {
+            Operand op = Operand(tok->getToken());
+            operands->push_back(op);
+        }
+    }
+    else
+    {
+        //greska
+    }
+
+    for (auto op : *operands)
+    {
+        {
+            std::cout << "Op name = " << op.getName() << "\t"
+                      << "Op type = " << op.getType() << "\t"
+                      << "Op size = " << op.getSize() << "\t"
+                      << "Op code = ";
+            auto flags = std::cout.flags();
+            for (int i = 0; i < op.getSize(); i++)
+            {
+                std::cout << std::hex << +op.getOpCode()[i];
+                std::cout << "\t";
+            };
+            std::cout.flags(flags);
+            std::cout << std::endl;
+        }
+    }
+    std::cout << std::endl;
 }

@@ -3,14 +3,14 @@
 
 int SymTable::zero = 0;
 
-bool SymTable::addSymbol(std::shared_ptr<Symbol> s)
+bool SymTable::addSymbol(std::shared_ptr<Symbol> s, bool declaration)
 {
     if (symbols->find(s->getName()) == symbols->end())
     {
         symbols->emplace(std::make_pair(s->getName(), s));
         return true;
     }
-    else if (!symbols->find(s->getName())->second->getDefined()) //deklarisan kao globalan ali nije definisan
+    else if (!symbols->find(s->getName())->second->getDefined() && declaration) //deklarisan kao globalan ali nije definisan
     {
         std::cout << "Usao u deklarisano prethodno!" << std::endl;
         std::shared_ptr<Symbol> inTable = symbols->find(s->getName())->second;
@@ -32,19 +32,22 @@ void SymTable::print()
 {
     std::cout << "Tabela Simbola" << std::endl;
     std::cout << "Name"
-              << "\t"
-              << "Section"
-              << "\t"
+              << "\t|"
+              << "Sect."
+              << "\t|"
               << "Value"
-              << "\t"
+              << "\t|"
               << "Visib."
-              << "\t"
-              << "Serial#"
-              << "\t"
+              << "\t|"
+              << "Serial"
+              << "\t|"
               << "Defined" << std::endl;
+
+    std::cout << "===============================================" << std::endl;
     for (auto symbol : *symbols)
     {
         std::cout << *symbol.second << std::endl;
+        std::cout << "===============================================" << std::endl;
     }
 }
 
@@ -55,5 +58,13 @@ std::shared_ptr<Symbol> SymTable::getUND()
 
 std::shared_ptr<Symbol> SymTable::getSymbol(std::string name)
 {
-    return symbols->find(name)->second;
+    std::map<std::string, std::shared_ptr<Symbol>>::iterator res = symbols->find(name);
+    if (res != symbols->end())
+    {
+        return res->second;
+    }
+    else
+    {
+        return nullptr;
+    }
 }

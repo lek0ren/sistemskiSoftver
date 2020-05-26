@@ -22,7 +22,8 @@ private:
     std::shared_ptr<std::vector<std::shared_ptr<Token>>> tokens;
     bool toContinue;
 
-    Assembler(){
+    Assembler()
+    {
         toContinue = true;
         locationCounter = 0;
         currSection = nullptr;
@@ -31,15 +32,14 @@ private:
         tokens = std::make_shared<std::vector<std::shared_ptr<Token>>>();
     }
 
-    
 public:
-    Assembler(Assembler const&) = delete;
+    Assembler(Assembler const &) = delete;
 
-    void operator=(Assembler const&) = delete;
+    void operator=(Assembler const &) = delete;
 
     void setCurrSection(std::shared_ptr<Section> s);
 
-    static Assembler& instance();
+    static Assembler &instance();
 
     void updateLocationCounter(int num);
 
@@ -48,4 +48,11 @@ public:
     bool setOutputFile(char *output);
 
     void assembly();
-}; 
+
+    int getLocationCounter();
+
+    std::shared_ptr<Section> getCurrentSection();
+
+    int zero = 0;
+    int numGen = 1;
+};

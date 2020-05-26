@@ -6,6 +6,7 @@
 #include <regex>
 #include "../h/symbol.h"
 #include "../h/symTable.h"
+#include "../h/instruction.h"
 
 bool Assembler::setOutputFile(char *output)
 {
@@ -49,8 +50,6 @@ void Assembler::assembly()
 {
     bool toContinue = true;
     int undNum = -1;
-    int zero = 0;
-    int numGen = 1;
 
     while (std::getline(infile, line) && toContinue)
     {
@@ -159,7 +158,7 @@ void Assembler::assembly()
                 std::cout << "Invalid input when declaring section " << newSection->getName() << "!\n";
                 break;
             }
-
+            tokens->clear();
             //ne sme nista drugo da ostane, da se proveri
         }
 
@@ -170,7 +169,7 @@ void Assembler::assembly()
             if (currSection)
             {
                 symLabel = std::make_shared<Symbol>(start, locationCounter, currSection->getNumber());
-                if (!SymTable::instance().addSymbol(symLabel))
+                if (!SymTable::instance().addSymbol(symLabel, true))
                 {
                     toContinue = false;
                     std::cout << "Multiple definision of symbol " << symLabel->getName() << "!\n";
@@ -182,6 +181,7 @@ void Assembler::assembly()
                     std::regex_match(start, match_name, reg_labelWout);
                     symLabel = SymTable::instance().getSymbol(match_name.str(1));
                     symLabel->setDefined();
+                    symLabel->setSection(currSection->getNumber());
                     symLabel->setNumber(numGen++);
                 }
                 tokens->erase(tokens->begin());
@@ -205,11 +205,32 @@ void Assembler::assembly()
                 //err
             }
         }
+
+        if (std::regex_match(start, m, reg_equ))
+        {
+
+            std::cout << "Usao ovde 1\n";
+            //preskaci za sata
+            tokens->clear();
+        }
         //prepoznavanje instrukcija
         if (!tokens->empty())
         {
+            start = (*tokens)[0]->getToken();
+            tokens->erase(tokens->begin(), tokens->begin() + 1);
+            Instruction *instruction = new Instruction(start, tokens);
         }
         delete token;
     }
     SymTable::instance().print();
+}
+
+int Assembler::getLocationCounter()
+{
+    return locationCounter;
+}
+
+std::shared_ptr<Section> Assembler::getCurrentSection()
+{
+    return currSection;
 }

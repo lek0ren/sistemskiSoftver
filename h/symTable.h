@@ -23,7 +23,7 @@ public:
 
     static SymTable &instance();
 
-    bool addSymbol(std::shared_ptr<Symbol> s);
+    bool addSymbol(std::shared_ptr<Symbol> s, bool declaration = false);
 
     std::shared_ptr<Symbol> getUND();
 
