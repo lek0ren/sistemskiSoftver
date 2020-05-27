@@ -24,6 +24,7 @@ pushw %r1
            c: .byte 2
 
 .section data:
-a: .long 8
+a: .word 8
+g: .skip 10
 
 .end

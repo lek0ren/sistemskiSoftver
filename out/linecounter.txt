@@ -58,3 +58,81 @@ src/symbol.cpp, code is 69, comment is 0, blank is 14.
 src/symTable.cpp, code is 53, comment is 1, blank is 6.
 src/util.cpp, code is 9, comment is 0, blank is 2.
 ===============================================================================
+===============================================================================
+EXTENSION NAME : linecounter
+EXTENSION VERSION : 0.2.7
+-------------------------------------------------------------------------------
+count time : 2020-05-27 13:42:55
+count workspace : /home/veljko/Documents/sis/projekat/sistemskiSoftver
+total files : 56
+total code lines : 5579
+total comment lines : 55
+total blank lines : 165
+
+    statistics
+   |      extension|     total code|  total comment|    total blank|percent|
+   -------------------------------------------------------------------------
+   |               |             32|             21|              7|   0.57|
+   |             .s|             26|              0|              4|   0.47|
+   |           .cpp|            857|             31|             82|     15|
+   |            .md|              1|              0|              0|  0.018|
+   |           .mdj|           4376|              0|              0|     78|
+   |             .h|            287|              3|             72|    5.1|
+   -------------------------------------------------------------------------
+.gitignore, code is 26, comment is 0, blank is 6.
+build/obj/assembler.o, it is a binary file.
+build/obj/byte.o, it is a binary file.
+build/obj/instruction.o, it is a binary file.
+build/obj/jmpInst.o, it is a binary file.
+build/obj/main.o, it is a binary file.
+build/obj/operand.o, it is a binary file.
+build/obj/regexes.o, it is a binary file.
+build/obj/section.o, it is a binary file.
+build/obj/skip.o, it is a binary file.
+build/obj/symbol.o, it is a binary file.
+build/obj/symTable.o, it is a binary file.
+build/obj/util.o, it is a binary file.
+build/obj/word.o, it is a binary file.
+build/output, it is a binary file.
+dokumentacija/GCC.pdf, it is a binary file.
+dokumentacija/gdb.pdf, it is a binary file.
+dokumentacija/GNU_asembler.pdf, it is a binary file.
+dokumentacija/KonstrukcijaAsemblera.pdf, it is a binary file.
+dokumentacija/V3_Konstrukcija_asemblera.pdf, it is a binary file.
+dokumentacija/V3a_elf.pdf, it is a binary file.
+dokumentacija/x86_64_asembler1.pdf, it is a binary file.
+dokumentacija/x86_64_asembler2.pdf, it is a binary file.
+dokumentacija/x86_64_asembler3.pdf, it is a binary file.
+h/assembler.h, code is 44, comment is 0, blank is 14.
+h/byte.h, code is 7, comment is 0, blank is 2.
+h/instruction.h, code is 24, comment is 0, blank is 4.
+h/jmpInst.h, code is 7, comment is 0, blank is 2.
+h/label.h, code is 2, comment is 0, blank is 1.
+h/operand.h, code is 47, comment is 3, blank is 5.
+h/regexes.h, code is 30, comment is 0, blank is 3.
+h/section.h, code is 18, comment is 0, blank is 5.
+h/skip.h, code is 7, comment is 0, blank is 2.
+h/symbol.h, code is 37, comment is 0, blank is 16.
+h/symTable.h, code is 24, comment is 0, blank is 9.
+h/Token.h, code is 13, comment is 0, blank is 2.
+h/util.h, code is 20, comment is 0, blank is 5.
+h/word.h, code is 7, comment is 0, blank is 2.
+kod.s, code is 26, comment is 0, blank is 4.
+Makefile, code is 5, comment is 21, blank is 1.
+README.md, code is 1, comment is 0, blank is 0.
+run, code is 1, comment is 0, blank is 0.
+shema.mdj, code is 4376, comment is 0, blank is 0.
+src/assembler.cpp, code is 204, comment is 10, blank is 21.
+src/byte.cpp, code is 27, comment is 3, blank is 1.
+src/instruction.cpp, code is 118, comment is 2, blank is 9.
+src/jmpInst.cpp, code is 20, comment is 2, blank is 1.
+src/main.cpp, code is 23, comment is 0, blank is 4.
+src/operand.cpp, code is 216, comment is 6, blank is 14.
+src/regexes.cpp, code is 29, comment is 2, blank is 4.
+src/section.cpp, code is 13, comment is 0, blank is 2.
+src/skip.cpp, code is 24, comment is 3, blank is 1.
+src/symbol.cpp, code is 68, comment is 0, blank is 15.
+src/symTable.cpp, code is 63, comment is 1, blank is 7.
+src/util.cpp, code is 9, comment is 0, blank is 2.
+src/word.cpp, code is 43, comment is 2, blank is 1.
+===============================================================================

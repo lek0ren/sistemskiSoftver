@@ -289,6 +289,407 @@
                     "filename": "src/util.cpp"
                 }
             ]
+        },
+        {
+            "version": "0.2.7",
+            "counttime": "2020-05-27 13:42:55",
+            "filesum": 56,
+            "codesum": 5579,
+            "commentsum": 55,
+            "blanksum": 165,
+            "statistics": {
+                "": {
+                    "code": 32,
+                    "comment": 21,
+                    "blank": 7
+                },
+                ".s": {
+                    "code": 26,
+                    "comment": 0,
+                    "blank": 4
+                },
+                ".cpp": {
+                    "code": 857,
+                    "comment": 31,
+                    "blank": 82
+                },
+                ".md": {
+                    "code": 1,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".mdj": {
+                    "code": 4376,
+                    "comment": 0,
+                    "blank": 0
+                },
+                ".h": {
+                    "code": 287,
+                    "comment": 3,
+                    "blank": 72
+                }
+            },
+            "filelist": [
+                {
+                    "blank": 6,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": ".gitignore"
+                },
+                {
+                    "filename": "build/obj/assembler.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/byte.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/instruction.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/jmpInst.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/main.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/operand.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/regexes.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/section.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/skip.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/symbol.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/symTable.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/util.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/obj/word.o",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "build/output",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/GCC.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/gdb.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/GNU_asembler.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/KonstrukcijaAsemblera.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/V3_Konstrukcija_asemblera.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/V3a_elf.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/x86_64_asembler1.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/x86_64_asembler2.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": "dokumentacija/x86_64_asembler3.pdf",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 14,
+                    "code": 44,
+                    "comment": 0,
+                    "filename": "h/assembler.h"
+                },
+                {
+                    "blank": 2,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "h/byte.h"
+                },
+                {
+                    "blank": 4,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "h/instruction.h"
+                },
+                {
+                    "blank": 2,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "h/jmpInst.h"
+                },
+                {
+                    "blank": 1,
+                    "code": 2,
+                    "comment": 0,
+                    "filename": "h/label.h"
+                },
+                {
+                    "blank": 5,
+                    "code": 47,
+                    "comment": 3,
+                    "filename": "h/operand.h"
+                },
+                {
+                    "blank": 3,
+                    "code": 30,
+                    "comment": 0,
+                    "filename": "h/regexes.h"
+                },
+                {
+                    "blank": 5,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "h/section.h"
+                },
+                {
+                    "blank": 2,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "h/skip.h"
+                },
+                {
+                    "blank": 16,
+                    "code": 37,
+                    "comment": 0,
+                    "filename": "h/symbol.h"
+                },
+                {
+                    "blank": 9,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "h/symTable.h"
+                },
+                {
+                    "blank": 2,
+                    "code": 13,
+                    "comment": 0,
+                    "filename": "h/Token.h"
+                },
+                {
+                    "blank": 5,
+                    "code": 20,
+                    "comment": 0,
+                    "filename": "h/util.h"
+                },
+                {
+                    "blank": 2,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "h/word.h"
+                },
+                {
+                    "blank": 4,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": "kod.s"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 21,
+                    "filename": "Makefile"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "README.md"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": "run"
+                },
+                {
+                    "blank": 0,
+                    "code": 4376,
+                    "comment": 0,
+                    "filename": "shema.mdj"
+                },
+                {
+                    "blank": 21,
+                    "code": 204,
+                    "comment": 10,
+                    "filename": "src/assembler.cpp"
+                },
+                {
+                    "blank": 1,
+                    "code": 27,
+                    "comment": 3,
+                    "filename": "src/byte.cpp"
+                },
+                {
+                    "blank": 9,
+                    "code": 118,
+                    "comment": 2,
+                    "filename": "src/instruction.cpp"
+                },
+                {
+                    "blank": 1,
+                    "code": 20,
+                    "comment": 2,
+                    "filename": "src/jmpInst.cpp"
+                },
+                {
+                    "blank": 4,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "src/main.cpp"
+                },
+                {
+                    "blank": 14,
+                    "code": 216,
+                    "comment": 6,
+                    "filename": "src/operand.cpp"
+                },
+                {
+                    "blank": 4,
+                    "code": 29,
+                    "comment": 2,
+                    "filename": "src/regexes.cpp"
+                },
+                {
+                    "blank": 2,
+                    "code": 13,
+                    "comment": 0,
+                    "filename": "src/section.cpp"
+                },
+                {
+                    "blank": 1,
+                    "code": 24,
+                    "comment": 3,
+                    "filename": "src/skip.cpp"
+                },
+                {
+                    "blank": 15,
+                    "code": 68,
+                    "comment": 0,
+                    "filename": "src/symbol.cpp"
+                },
+                {
+                    "blank": 7,
+                    "code": 63,
+                    "comment": 1,
+                    "filename": "src/symTable.cpp"
+                },
+                {
+                    "blank": 2,
+                    "code": 9,
+                    "comment": 0,
+                    "filename": "src/util.cpp"
+                },
+                {
+                    "blank": 1,
+                    "code": 43,
+                    "comment": 2,
+                    "filename": "src/word.cpp"
+                }
+            ]
         }
     ]
 }

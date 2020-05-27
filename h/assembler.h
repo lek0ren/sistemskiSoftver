@@ -20,7 +20,6 @@ private:
     std::string line;
     std::shared_ptr<std::vector<std::shared_ptr<Section>>> sections;
     std::shared_ptr<std::vector<std::shared_ptr<Token>>> tokens;
-    bool toContinue;
 
     Assembler()
     {
@@ -55,4 +54,5 @@ public:
 
     int zero = 0;
     int numGen = 1;
+    bool toContinue = true;
 };

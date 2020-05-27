@@ -9,9 +9,10 @@
 class Instruction
 {
 protected:
-    std::string opCode;
+    std::vector<unsigned char> opCode;
     int size;
     int opSize;
+    int instCode;
     typedef std::map<std::string, int> InstructionOpNum;
     typedef std::map<std::string, char> InstructionCode;
     static InstructionOpNum InstructionOpNum_;
@@ -22,7 +23,7 @@ protected:
 public:
     Instruction(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>> tokens);
 
-    std::string getOpCode();
+    std::vector<unsigned char> getOpCode();
 
     int getSize();
 };

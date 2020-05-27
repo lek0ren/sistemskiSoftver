@@ -4,7 +4,7 @@
 
 std::ostream &operator<<(std::ostream &output, const Symbol &s)
 {
-    output << s.getName() << "\t|" << *s.section << "\t|" << s.offset << "\t|" << (s.local ? "l" : "g") << "\t|" << s.num << "\t|" << s.defined << std::endl;
+    output << s.getName() << "\t|  " << *s.section << "\t|  " << s.offset << "\t|  " << (s.local ? "l" : "g") << "\t|  " << s.num << "\t|  " << s.defined << std::endl;
     return output;
 }
 

@@ -5,27 +5,26 @@
 class Operand
 {
 public:
-    enum Type
+    enum class Type
     {
         LITERAL_IMM = 0,
-        SYMBOL_IMM = 0,
-        REG_DIR = 1,
-        REG_IND = 2,
-        LITERAL_REG_OFF = 3,
-        SYMBOL_REG_OFF = 3,
-        PC_RELATIVE = 2,
-        LITERAL_DIR = 4,
-        SYMBOL_DIR = 4,
-        JMP_LITERAL_IMM = 0, //
-        JMP_SYMBOL_IMM = 0,  //
-        JMP_REG_DIR = 1,     ///
-        JMP_REG_IND = 2,
-        JMP_LITERAL_REG_OFF = 3,
-        JMP_SYMBOL_REG_OFF = 3,
-        JMP_PC_RELATIVE = 2,
-        JMP_LITERAL_DIR = 4,
-        JMP_SYMBOL_DIR = 4
-
+        SYMBOL_IMM,
+        REG_DIR,
+        REG_IND,
+        LITERAL_REG_OFF,
+        SYMBOL_REG_OFF,
+        PC_RELATIVE,
+        LITERAL_DIR,
+        SYMBOL_DIR,
+        JMP_LITERAL_IMM, //
+        JMP_SYMBOL_IMM,  //
+        JMP_REG_DIR,     ///
+        JMP_REG_IND,
+        JMP_LITERAL_REG_OFF,
+        JMP_SYMBOL_REG_OFF,
+        JMP_PC_RELATIVE,
+        JMP_LITERAL_DIR,
+        JMP_SYMBOL_DIR
     };
 
 private:
@@ -40,9 +39,13 @@ private:
     void extractSymbol(std::smatch &s);
     void extractReg(std::smatch &s);
 
+    typedef std::map<Type, char> OperandTypeCode;
+    static OperandTypeCode OperandTypeCode_;
+
 public:
     Operand(std::string name);
     unsigned char *getOpCode();
+    int getType(int i);
     Type getType();
     int getSize();
     std::string getName();

@@ -4,6 +4,7 @@
 #include <map>
 #include <regex>
 #include <iostream>
+#include "../h/util.h"
 
 Instruction::InstructionOpNum Instruction::InstructionOpNum_ = {
     {"halt", 0},
@@ -64,10 +65,17 @@ int Instruction::getSize()
     return size;
 }
 
+std::vector<unsigned char> Instruction::getOpCode()
+{
+    return opCode;
+}
+
 Instruction::Instruction(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>> tokens)
 {
     std::smatch match_name;
     opSize = 2;
+    size = 1;
+    opCode = std::vector<unsigned char>();
 
     if (std::regex_match(name, match_name, reg_oneOpInstr) || std::regex_match(name, match_name, reg_twoOpInstr))
     {
@@ -76,41 +84,44 @@ Instruction::Instruction(std::string name, std::shared_ptr<std::vector<std::shar
             opSize = 1;
     }
 
-    size = InstructionCode_[name];
+    instCode = InstructionCode_[name];
     numOfOp = InstructionOpNum_[name];
-
-    /*if (std::regex_match(name, match_name, reg_oneOpInstr))
-    {
-        if (match_name[2].str() == "b")
-            opSize = 1;
-    }
-
-    if (std::regex_match(name, match_name, reg_twoOpInstr))
-    {
-        if (match_name[2].str() == "b")
-            opSize = 1;
-    }*/
+    opCode.push_back(instCode);
 
     operands = std::make_shared<std::vector<Operand>>();
-
-    if (tokens->size() == numOfOp)
+    if (name != ".byte" && name != ".word" && name != ".skip")
     {
-        for (auto &tok : *tokens)
+        if (tokens->size() == numOfOp)
         {
-            Operand op = Operand(tok->getToken());
-            operands->push_back(op);
+            for (auto &tok : *tokens)
+            {
+                Operand op = Operand(tok->getToken());
+                operands->push_back(op);
+                size += op.getSize();
+            }
+        }
+        else
+        {
+            //greska
         }
     }
     else
     {
-        //greska
+        numOfOp = -1;
+        for (auto &tok : *tokens)
+        {
+            Operand op = Operand(tok->getToken());
+            operands->push_back(op);
+
+            //prosiri operand da moze da prepozna + i -
+        }
     }
 
     for (auto op : *operands)
     {
         {
             std::cout << "Op name = " << op.getName() << "\t"
-                      << "Op type = " << op.getType() << "\t"
+                      << "Op type = " << op.getType(1) << "\t"
                       << "Op size = " << op.getSize() << "\t"
                       << "Op code = ";
             auto flags = std::cout.flags();
@@ -118,10 +129,13 @@ Instruction::Instruction(std::string name, std::shared_ptr<std::vector<std::shar
             {
                 std::cout << std::hex << +op.getOpCode()[i];
                 std::cout << "\t";
+
+                opCode.push_back(op.getOpCode()[i]);
             };
             std::cout.flags(flags);
             std::cout << std::endl;
         }
     }
+
     std::cout << std::endl;
 }

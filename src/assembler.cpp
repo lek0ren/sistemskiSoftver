@@ -7,6 +7,10 @@
 #include "../h/symbol.h"
 #include "../h/symTable.h"
 #include "../h/instruction.h"
+#include "../h/jmpInst.h"
+#include "../h/skip.h"
+#include "../h/word.h"
+#include "../h/byte.h"
 
 bool Assembler::setOutputFile(char *output)
 {
@@ -48,7 +52,6 @@ void Assembler::setCurrSection(std::shared_ptr<Section> s)
 
 void Assembler::assembly()
 {
-    bool toContinue = true;
     int undNum = -1;
 
     while (std::getline(infile, line) && toContinue)
@@ -217,8 +220,36 @@ void Assembler::assembly()
         if (!tokens->empty())
         {
             start = (*tokens)[0]->getToken();
+
             tokens->erase(tokens->begin(), tokens->begin() + 1);
-            Instruction *instruction = new Instruction(start, tokens);
+            Instruction *instruction;
+            if (std::regex_match(start, m, reg_jmpInstr))
+            {
+                instruction = new JmpInst(start, tokens);
+            }
+            else
+            {
+
+                instruction = new Instruction(start, tokens);
+            }
+
+            updateLocationCounter(instruction->getSize());
+            // currSection->appendCode();
+
+            std::vector<unsigned char> instCode = instruction->getOpCode();
+            for (int i = 0; i < instruction->getSize(); i++)
+            {
+                if (i == 0)
+                {
+                    std::cout << "instrukcija " << start << ": \t";
+                }
+                if (i % 2 == 0)
+                {
+                    std::cout << ' ';
+                }
+                std::cout << hex(instCode[i]);
+            }
+            std::cout << std::endl;
         }
         delete token;
     }

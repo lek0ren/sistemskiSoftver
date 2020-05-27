@@ -6,6 +6,9 @@
 #include "../h/symTable.h"
 #include "../h/assembler.h"
 
+Operand::OperandTypeCode Operand::OperandTypeCode_ = {
+    {Type::LITERAL_DIR, 1}};
+
 Operand::Operand(std::string name)
 {
     std::smatch m;
@@ -20,8 +23,8 @@ Operand::Operand(std::string name)
 
     if (std::regex_match(name, m, reg_jmp_pc_rel))
     {
-        type = JMP_PC_RELATIVE;
-        opCode[0] = type << 5 | 7 << 1 | horl;
+        type = Type::JMP_PC_RELATIVE;
+        opCode[0] = OperandTypeCode_[type] << 5 | 7 << 1 | horl;
         //relokacija
         opCode[1] = 0x12;
         opCode[2] = 0x12;
@@ -29,27 +32,27 @@ Operand::Operand(std::string name)
     }
     else if (std::regex_match(name, m, reg_jmp_reg_dir))
     {
-        type = JMP_REG_DIR;
+        type = Type::JMP_REG_DIR;
         extractReg(m);
     }
     else if (std::regex_match(name, m, reg_jmp_reg_ind))
     {
-        type = JMP_REG_IND;
+        type = Type::JMP_REG_IND;
         extractReg(m);
     }
     else if (std::regex_match(name, m, reg_literal_dir))
     {
-        type = LITERAL_DIR;
+        type = Type::LITERAL_DIR;
         extractLiteral(m);
     }
     else if (std::regex_match(name, m, reg_literal_imm))
     {
-        type = LITERAL_IMM;
+        type = Type::LITERAL_IMM;
         extractLiteral(m);
     }
     else if (std::regex_match(name, m, reg_symbol_imm))
     {
-        type = SYMBOL_IMM;
+        type = Type::SYMBOL_IMM;
         std::cout << "usao\n";
         std::shared_ptr<Symbol> sym = SymTable::instance().getSymbol(m.str(1));
         if (!sym)
@@ -61,7 +64,7 @@ Operand::Operand(std::string name)
     }
     else if (std::regex_match(name, m, reg_symbol_dir))
     {
-        type = SYMBOL_DIR;
+        type = Type::SYMBOL_DIR;
         std::cout << "usao 2\n";
         std::shared_ptr<Symbol> sym = SymTable::instance().getSymbol(name);
         if (!sym)
@@ -76,12 +79,12 @@ Operand::Operand(std::string name)
     }
     else if (std::regex_match(name, m, reg_literal_reg_off))
     {
-        type = LITERAL_REG_OFF;
+        type = Type::LITERAL_REG_OFF;
         extractLiteralAndOffset(m);
     }
     else if (std::regex_match(name, m, reg_symbol_reg_off))
     {
-        type = SYMBOL_REG_OFF;
+        type = Type::SYMBOL_REG_OFF;
         if (m[3].length())
         {
             regNum = stoi(m[3].str());
@@ -99,8 +102,8 @@ Operand::Operand(std::string name)
     }
     else if (std::regex_match(name, m, reg_pc_rel))
     {
-        type = PC_RELATIVE;
-        opCode[0] = type << 5 | 7 << 1 | horl;
+        type = Type::PC_RELATIVE;
+        opCode[0] = OperandTypeCode_[type] << 5 | 7 << 1 | horl;
         //relokacija
         opCode[1] = 0x12;
         opCode[2] = 0x12;
@@ -108,52 +111,57 @@ Operand::Operand(std::string name)
     }
     else if (std::regex_match(name, m, reg_reg_dir))
     {
-        type = REG_DIR;
+        type = Type::REG_DIR;
         extractReg(m);
     }
     else if (std::regex_match(name, m, reg_reg_ind))
     {
-        type = REG_IND;
+        type = Type::REG_IND;
         extractReg(m);
     }
     else if (std::regex_match(name, m, reg_jmp_literal_dir))
     {
-        type = JMP_LITERAL_DIR;
+        type = Type::JMP_LITERAL_DIR;
         extractLiteral(m);
     }
     else if (std::regex_match(name, m, reg_jmp_literal_imm))
     {
-        type = JMP_LITERAL_IMM;
+        type = Type::JMP_LITERAL_IMM;
         extractLiteral(m);
     }
     else if (std::regex_match(name, m, reg_jmp_symbol_imm))
     {
-        type = JMP_SYMBOL_IMM;
+        type = Type::JMP_SYMBOL_IMM;
         //relokacija
     }
     else if (std::regex_match(name, m, reg_jmp_symbol_dir))
     {
-        type = JMP_SYMBOL_DIR;
+        type = Type::JMP_SYMBOL_DIR;
         //relokacija
     }
     else if (std::regex_match(name, m, reg_jmp_literal_reg_off))
     {
-        type = JMP_LITERAL_REG_OFF;
+        type = Type::JMP_LITERAL_REG_OFF;
         extractLiteralAndOffset(m);
     }
     else if (std::regex_match(name, m, reg_jmp_symbol_reg_off))
     {
-        type = JMP_SYMBOL_REG_OFF;
+        type = Type::JMP_SYMBOL_REG_OFF;
 
         //relokacija
     }
 
-    opCode[0] |= type << 5;
+    opCode[0] |= OperandTypeCode_[type] << 5;
 }
 
 unsigned char *Operand::getOpCode()
 {
     return opCode;
+}
+
+int Operand::getType(int i)
+{
+    return OperandTypeCode_[type];
 }
 
 Operand::Type Operand::getType()
