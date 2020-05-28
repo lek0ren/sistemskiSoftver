@@ -50,6 +50,10 @@ public:
 
     int getLocationCounter();
 
+    void print();
+
+    void backPatch();
+
     std::shared_ptr<Section> getCurrentSection();
 
     int zero = 0;

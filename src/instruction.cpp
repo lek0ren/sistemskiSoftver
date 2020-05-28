@@ -5,6 +5,9 @@
 #include <regex>
 #include <iostream>
 #include "../h/util.h"
+#include "../h/symTable.h"
+#include "../h/symbol.h"
+#include "../h/assembler.h"
 
 Instruction::InstructionOpNum Instruction::InstructionOpNum_ = {
     {"halt", 0},
@@ -87,7 +90,7 @@ Instruction::Instruction(std::string name, std::shared_ptr<std::vector<std::shar
     instCode = InstructionCode_[name];
     numOfOp = InstructionOpNum_[name];
     opCode.push_back(instCode);
-
+    std::cout << "instruction :  " << instCode << std::endl;
     operands = std::make_shared<std::vector<Operand>>();
     if (name != ".byte" && name != ".word" && name != ".skip")
     {
@@ -97,6 +100,13 @@ Instruction::Instruction(std::string name, std::shared_ptr<std::vector<std::shar
             {
                 Operand op = Operand(tok->getToken());
                 operands->push_back(op);
+
+                if (op.getType() == Operand::Type::SYMBOL_DIR || op.getType() == Operand::Type::SYMBOL_IMM || op.getType() == Operand::Type::SYMBOL_REG_OFF || op.getType() == Operand::Type::JMP_SYMBOL_DIR || op.getType() == Operand::Type::JMP_SYMBOL_IMM || op.getType() == Operand::Type::JMP_SYMBOL_REG_OFF)
+                {
+                    std::cout << "stigao\n";
+                    if (!SymTable::instance().getSymbol(op.getName())->getDefined())
+                        SymTable::instance().getSymbol(op.getName())->addPatch(Assembler::instance().getLocationCounter() + size + 1);
+                }
                 size += op.getSize();
             }
         }
@@ -107,12 +117,13 @@ Instruction::Instruction(std::string name, std::shared_ptr<std::vector<std::shar
     }
     else
     {
-        numOfOp = -1;
+        numOfOp = 0;
+        opCode.clear();
         for (auto &tok : *tokens)
         {
             Operand op = Operand(tok->getToken());
             operands->push_back(op);
-
+            numOfOp++;
             //prosiri operand da moze da prepozna + i -
         }
     }
@@ -127,15 +138,12 @@ Instruction::Instruction(std::string name, std::shared_ptr<std::vector<std::shar
             auto flags = std::cout.flags();
             for (int i = 0; i < op.getSize(); i++)
             {
+                opCode.push_back(op.getOpCode()[i]);
                 std::cout << std::hex << +op.getOpCode()[i];
                 std::cout << "\t";
-
-                opCode.push_back(op.getOpCode()[i]);
             };
             std::cout.flags(flags);
             std::cout << std::endl;
         }
     }
-
-    std::cout << std::endl;
 }

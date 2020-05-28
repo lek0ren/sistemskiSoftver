@@ -68,3 +68,8 @@ std::shared_ptr<Symbol> SymTable::getSymbol(std::string name)
         return nullptr;
     }
 }
+
+std::shared_ptr<std::map<std::string, std::shared_ptr<Symbol>>> SymTable::getSymbols()
+{
+    return symbols;
+}

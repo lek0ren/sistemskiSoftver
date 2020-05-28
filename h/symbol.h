@@ -9,10 +9,10 @@ class Section;
 class Symbol
 {
 protected:
-    struct STForwartRefs
+    struct ST_forwardref
     {
         int patch;
-        STForwartRefs *next;
+        std::shared_ptr<Section> section;
     };
     int offset;
     int num;
@@ -20,7 +20,7 @@ protected:
     std::string name;
     int *section;
     bool defined;
-    STForwartRefs *flink;
+    std::shared_ptr<std::vector<ST_forwardref>> flink;
 
 public:
     Symbol(std::string name, int off, int &s);
@@ -49,5 +49,9 @@ public:
 
     int &getSection();
 
+    void addPatch(int p);
+
     friend std::ostream &operator<<(std::ostream &output, const Symbol &s);
+
+    friend class Assembler;
 };

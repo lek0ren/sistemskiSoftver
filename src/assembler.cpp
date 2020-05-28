@@ -11,6 +11,9 @@
 #include "../h/skip.h"
 #include "../h/word.h"
 #include "../h/byte.h"
+#include "../h/oneOp.h"
+#include "../h/twoOp.h"
+#include "../h/noOp.h"
 
 bool Assembler::setOutputFile(char *output)
 {
@@ -227,14 +230,34 @@ void Assembler::assembly()
             {
                 instruction = new JmpInst(start, tokens);
             }
-            else
+            else if (std::regex_match(start, m, reg_oneOpInstr))
             {
 
-                instruction = new Instruction(start, tokens);
+                instruction = new OneOp(start, tokens);
+            }
+            else if (std::regex_match(start, m, reg_twoOpInstr))
+            {
+                instruction = new TwoOp(start, tokens);
+            }
+            else if (std::regex_match(start, m, reg_byte))
+            {
+                instruction = new Byte(start, tokens);
+            }
+            else if (std::regex_match(start, m, reg_word))
+            {
+                instruction = new Word(start, tokens);
+            }
+            else if (std::regex_match(start, m, reg_skip))
+            {
+                instruction = new Skip(start, tokens);
+            }
+            else
+            {
+                instruction = new NoOp(start, tokens);
             }
 
             updateLocationCounter(instruction->getSize());
-            // currSection->appendCode();
+            currSection->appendCode(instruction->getOpCode());
 
             std::vector<unsigned char> instCode = instruction->getOpCode();
             for (int i = 0; i < instruction->getSize(); i++)
@@ -243,17 +266,16 @@ void Assembler::assembly()
                 {
                     std::cout << "instrukcija " << start << ": \t";
                 }
-                if (i % 2 == 0)
-                {
-                    std::cout << ' ';
-                }
-                std::cout << hex(instCode[i]);
+                std::cout << hex(instCode[i]) << ' ';
             }
-            std::cout << std::endl;
+            std::cout << std::endl
+                      << std::endl;
         }
         delete token;
     }
+    backPatch();
     SymTable::instance().print();
+    print();
 }
 
 int Assembler::getLocationCounter()
@@ -264,4 +286,28 @@ int Assembler::getLocationCounter()
 std::shared_ptr<Section> Assembler::getCurrentSection()
 {
     return currSection;
+}
+
+void Assembler::print()
+{
+    std::cout << std::endl
+              << std::endl
+              << "Sections" << std::endl;
+    for (auto section : *sections)
+    {
+        std::cout << *section;
+    }
+    std::cout << std::endl;
+}
+
+void Assembler::backPatch()
+{
+    for (auto sym : *(SymTable::instance().getSymbols()))
+    {
+        for (auto forw : *(sym.second->flink))
+        {
+            forw.section->code->at(forw.patch + 1) = sym.second->getOffset() >> 8;
+            forw.section->code->at(forw.patch) = sym.second->getOffset() & 0xFF;
+        }
+    }
 }

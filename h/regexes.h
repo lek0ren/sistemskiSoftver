@@ -10,7 +10,11 @@ extern std::regex reg_extern;
 extern std::regex reg_end;
 extern std::regex reg_oneOpInstr;
 extern std::regex reg_twoOpInstr;
+extern std::regex reg_noOp;
 extern std::regex reg_equ;
+extern std::regex reg_byte;
+extern std::regex reg_word;
+extern std::regex reg_skip;
 
 extern std::regex reg_literal_imm;
 extern std::regex reg_symbol_imm;

@@ -6,13 +6,14 @@
 
 Skip::Skip(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>> tokens) : Instruction(name, tokens)
 {
+    opCode.clear();
     if (operands->size() == 1)
     {
         if ((*operands)[0].getType() == Operand::Type::LITERAL_DIR)
         {
-            unsigned char *operandCode = (*operands)[0].getOpCode();
-            size = *operandCode;
-            for (int i = operandCode[0]; i > 0; i--)
+            int operandCode = stoi((*operands)[0].getName());
+            size = operandCode;
+            for (int i = operandCode; i > 0; i--)
                 opCode.push_back(0);
         } // proveriti ako se dobije jedan simbol// relokacija
     }

@@ -1,5 +1,8 @@
 .global a
 .extern b, d
+.section data:
+g: .skip 10
+a: .word 300
 
 .section text:
 .equ a , b
@@ -22,9 +25,6 @@ jgt *simbol(%r2)
 pushw %r1
 
            c: .byte 2
-
-.section data:
-a: .word 8
-g: .skip 10
+           simbol: .word 9
 
 .end

@@ -7,7 +7,25 @@
 #include "../h/assembler.h"
 
 Operand::OperandTypeCode Operand::OperandTypeCode_ = {
-    {Type::LITERAL_DIR, 1}};
+    {Type::LITERAL_DIR, 4},
+    {Type::LITERAL_IMM, 0},
+    {Type::SYMBOL_IMM, 0},
+    {Type::REG_DIR, 1},
+    {Type::REG_IND, 2},
+    {Type::LITERAL_REG_OFF, 3},
+    {Type::SYMBOL_REG_OFF, 3},
+    {Type::PC_RELATIVE, 3},
+    {Type::SYMBOL_DIR, 4},
+    {Type::JMP_LITERAL_IMM, 0}, //
+    {Type::JMP_SYMBOL_IMM, 0},  //
+    {Type::JMP_REG_DIR, 1},     ///
+    {Type::JMP_REG_IND, 2},
+    {Type::JMP_LITERAL_REG_OFF, 3},
+    {Type::JMP_SYMBOL_REG_OFF, 3},
+    {Type::JMP_PC_RELATIVE, 3},
+    {Type::JMP_LITERAL_DIR, 4},
+    {Type::JMP_SYMBOL_DIR, 4},
+};
 
 Operand::Operand(std::string name)
 {
@@ -25,10 +43,7 @@ Operand::Operand(std::string name)
     {
         type = Type::JMP_PC_RELATIVE;
         opCode[0] = OperandTypeCode_[type] << 5 | 7 << 1 | horl;
-        //relokacija
-        opCode[1] = 0x12;
-        opCode[2] = 0x12;
-        size = 3;
+        addSymbolToCode(name, m);
     }
     else if (std::regex_match(name, m, reg_jmp_reg_dir))
     {
@@ -53,29 +68,12 @@ Operand::Operand(std::string name)
     else if (std::regex_match(name, m, reg_symbol_imm))
     {
         type = Type::SYMBOL_IMM;
-        std::cout << "usao\n";
-        std::shared_ptr<Symbol> sym = SymTable::instance().getSymbol(m.str(1));
-        if (!sym)
-        {
-            sym = std::make_shared<Symbol>(m.str(1), Assembler::instance().getLocationCounter(), SymTable::instance().getUND()->getNumber());
-            SymTable::instance().addSymbol(sym);
-        }
-        std::cout << sym << std::endl;
+        addSymbolToCode(name, m);
     }
     else if (std::regex_match(name, m, reg_symbol_dir))
     {
         type = Type::SYMBOL_DIR;
-        std::cout << "usao 2\n";
-        std::shared_ptr<Symbol> sym = SymTable::instance().getSymbol(name);
-        if (!sym)
-        {
-            sym = std::make_shared<Symbol>(m.str(1), Assembler::instance().getLocationCounter(), SymTable::instance().getUND()->getNumber());
-            if (SymTable::instance().addSymbol(sym))
-            {
-                sym->setNumber(Assembler::instance().numGen++);
-            }
-        }
-        std::cout << *sym << std::endl;
+        addSymbolToCode(name, m);
     }
     else if (std::regex_match(name, m, reg_literal_reg_off))
     {
@@ -94,20 +92,15 @@ Operand::Operand(std::string name)
             regNum = 7;
         }
         opCode[0] = regNum << 1;
-        size = 3;
 
-        //relokacija
-        opCode[1] = 0x12;
-        opCode[2] = 0x12;
+        addSymbolToCode(name, m);
     }
     else if (std::regex_match(name, m, reg_pc_rel))
     {
         type = Type::PC_RELATIVE;
         opCode[0] = OperandTypeCode_[type] << 5 | 7 << 1 | horl;
-        //relokacija
-        opCode[1] = 0x12;
-        opCode[2] = 0x12;
-        size = 3;
+
+        addSymbolToCode(name, m);
     }
     else if (std::regex_match(name, m, reg_reg_dir))
     {
@@ -132,12 +125,14 @@ Operand::Operand(std::string name)
     else if (std::regex_match(name, m, reg_jmp_symbol_imm))
     {
         type = Type::JMP_SYMBOL_IMM;
-        //relokacija
+
+        addSymbolToCode(name, m);
     }
     else if (std::regex_match(name, m, reg_jmp_symbol_dir))
     {
         type = Type::JMP_SYMBOL_DIR;
-        //relokacija
+
+        addSymbolToCode(name, m);
     }
     else if (std::regex_match(name, m, reg_jmp_literal_reg_off))
     {
@@ -148,7 +143,7 @@ Operand::Operand(std::string name)
     {
         type = Type::JMP_SYMBOL_REG_OFF;
 
-        //relokacija
+        addSymbolToCode(name, m);
     }
 
     opCode[0] |= OperandTypeCode_[type] << 5;
@@ -233,4 +228,27 @@ void Operand::extractReg(std::smatch &m)
         }
     }
     opCode[0] = regNum << 1 | horl;
+}
+
+void Operand::addSymbolToCode(std::string name, std::smatch &m)
+{
+    std::shared_ptr<Symbol> sym = SymTable::instance().getSymbol(name);
+    if (!sym)
+    {
+        this->name = m.str(1);
+        sym = std::make_shared<Symbol>(m.str(1), Assembler::instance().getLocationCounter(), SymTable::instance().getUND()->getNumber());
+        if (SymTable::instance().addSymbol(sym))
+        {
+            sym->setNumber(Assembler::instance().numGen++);
+            //relokacija
+            opCode[1] = 0x00;
+            opCode[2] = 0x00;
+        }
+    }
+    else
+    {
+        opCode[1] = sym->getOffset() & 0xFF;
+        opCode[2] = sym->getOffset() >> 8;
+    }
+    size = 3;
 }

@@ -29,5 +29,7 @@ public:
 
     std::shared_ptr<Symbol> getSymbol(std::string);
 
+    std::shared_ptr<std::map<std::string, std::shared_ptr<Symbol>>> getSymbols();
+
     void print();
 };

@@ -1,10 +1,15 @@
 #include "../h/symbol.h"
 #include "../h/section.h"
+#include "../h/assembler.h"
 #include <iostream>
 
 std::ostream &operator<<(std::ostream &output, const Symbol &s)
 {
-    output << s.getName() << "\t|  " << *s.section << "\t|  " << s.offset << "\t|  " << (s.local ? "l" : "g") << "\t|  " << s.num << "\t|  " << s.defined << std::endl;
+    output << s.getName() << "\t|  " << *s.section << "\t|  " << s.offset << "\t|  " << (s.local ? "l" : "g") << "\t|  " << s.num << "\t|  " << s.defined << "\t|  ";
+    for (auto f : *(s.flink))
+    {
+        std::cout << f.patch << " " << std::endl;
+    }
     return output;
 }
 
@@ -17,7 +22,7 @@ Symbol::Symbol(std::string name, int off, int &s)
     section = s == -1 ? &num : &s;
     this->num = 0;
     defined = false;
-    flink = nullptr;
+    flink = std::make_shared<std::vector<ST_forwardref>>();
     local = true;
 }
 
@@ -80,4 +85,12 @@ void Symbol::setName(std::string name)
 void Symbol::setSection(int &s)
 {
     *section = s;
+}
+
+void Symbol::addPatch(int p)
+{
+    ST_forwardref ref;
+    ref.patch = p;
+    ref.section = Assembler::instance().getCurrentSection();
+    flink->push_back(ref);
 }

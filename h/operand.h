@@ -39,6 +39,8 @@ private:
     void extractSymbol(std::smatch &s);
     void extractReg(std::smatch &s);
 
+    void addSymbolToCode(std::string name, std::smatch &m);
+
     typedef std::map<Type, char> OperandTypeCode;
     static OperandTypeCode OperandTypeCode_;
 

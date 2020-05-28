@@ -6,32 +6,15 @@
 
 Word::Word(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>> tokens) : Instruction(name, tokens)
 {
-    if (operands->size() == 2)
+    // opCode = std::vector<unsigned char>();
+    if (operands->size() == 1)
     {
         if ((*operands)[0].getType() == Operand::Type::LITERAL_DIR)
         {
-            unsigned char *operandCode = (*operands)[0].getOpCode();
-            if ((*operands)[0].getSize() == 1)
-            {
-                opCode.push_back(operandCode[0]);
-                opCode.push_back('0');
-                opCode.push_back('0');
-                opCode.push_back('0');
-            }
-            else if ((*operands)[0].getSize() == 2)
-            {
-                opCode.push_back(operandCode[1]);
-                opCode.push_back(operandCode[0]);
-                opCode.push_back('0');
-                opCode.push_back('0');
-            }
-            else
-            {
-                opCode.push_back(operandCode[2]);
-                opCode.push_back(operandCode[1]);
-                opCode.push_back(operandCode[0]);
-                opCode.push_back('0');
-            }
+            opCode.clear();
+            int operandCode = stoi((*operands)[0].getName());
+            opCode.push_back(operandCode & 0xFF);
+            opCode.push_back((operandCode >> 8) & 0xFF);
         }
     }
     else if (operands->size() > 2)

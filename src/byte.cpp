@@ -3,9 +3,11 @@
 #include "../h/operand.h"
 #include "../h/util.h"
 #include <string>
+#include <iostream>
 
 Byte::Byte(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>> tokens) : Instruction(name, tokens)
 {
+    std::cout << ".byte direktiva " << operands->size() << std::endl;
     if (operands->size() == 1)
     {
         if ((*operands)[0].getType() == Operand::Type::LITERAL_DIR)
