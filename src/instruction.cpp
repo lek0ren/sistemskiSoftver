@@ -103,9 +103,14 @@ Instruction::Instruction(std::string name, std::shared_ptr<std::vector<std::shar
 
                 if (op.getType() == Operand::Type::SYMBOL_DIR || op.getType() == Operand::Type::SYMBOL_IMM || op.getType() == Operand::Type::SYMBOL_REG_OFF || op.getType() == Operand::Type::JMP_SYMBOL_DIR || op.getType() == Operand::Type::JMP_SYMBOL_IMM || op.getType() == Operand::Type::JMP_SYMBOL_REG_OFF)
                 {
-                    std::cout << "stigao\n";
-                    if (!SymTable::instance().getSymbol(op.getName())->getDefined())
-                        SymTable::instance().getSymbol(op.getName())->addPatch(Assembler::instance().getLocationCounter() + size + 1);
+                    std::shared_ptr<Symbol> sym = SymTable::instance().getSymbol(op.getName());
+                    std::shared_ptr<Section> currSection = Assembler::instance().getCurrentSection();
+                    int symPosition = Assembler::instance().getLocationCounter() + size + 1;
+
+                    if (!sym->getDefined())
+                    {
+                        sym->addPatch(symPosition); // +1 jer prvo ide kod adresiranja
+                    }
                 }
                 size += op.getSize();
             }

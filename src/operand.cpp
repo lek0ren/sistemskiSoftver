@@ -43,7 +43,7 @@ Operand::Operand(std::string name)
     {
         type = Type::JMP_PC_RELATIVE;
         opCode[0] = OperandTypeCode_[type] << 5 | 7 << 1 | horl;
-        addSymbolToCode(name, m);
+        addSymbolToCode(m[1].str(), m);
     }
     else if (std::regex_match(name, m, reg_jmp_reg_dir))
     {
@@ -100,7 +100,7 @@ Operand::Operand(std::string name)
         type = Type::PC_RELATIVE;
         opCode[0] = OperandTypeCode_[type] << 5 | 7 << 1 | horl;
 
-        addSymbolToCode(name, m);
+        addSymbolToCode(m[1].str(), m);
     }
     else if (std::regex_match(name, m, reg_reg_dir))
     {
@@ -232,11 +232,12 @@ void Operand::extractReg(std::smatch &m)
 
 void Operand::addSymbolToCode(std::string name, std::smatch &m)
 {
+    std::cout << name << std::endl;
     std::shared_ptr<Symbol> sym = SymTable::instance().getSymbol(name);
     if (!sym)
     {
         this->name = m.str(1);
-        sym = std::make_shared<Symbol>(m.str(1), Assembler::instance().getLocationCounter(), SymTable::instance().getUND()->getNumber());
+        sym = std::make_shared<Symbol>(m.str(1), 0, SymTable::instance().getUND()->getNumber());
         if (SymTable::instance().addSymbol(sym))
         {
             sym->setNumber(Assembler::instance().numGen++);

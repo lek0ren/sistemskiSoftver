@@ -13,6 +13,7 @@ protected:
     {
         int patch;
         std::shared_ptr<Section> section;
+        bool rel = false;
     };
     int offset;
     int num;
@@ -25,7 +26,10 @@ protected:
 public:
     Symbol(std::string name, int off, int &s);
 
-    void setToGlobal();
+    virtual void setToGlobal()
+    {
+        local = false;
+    }
 
     void setNumber(int num);
 
@@ -45,11 +49,13 @@ public:
 
     int getOffset();
 
+    bool getLocal();
+
     std::string getName();
 
     int &getSection();
 
-    void addPatch(int p);
+    void addPatch(int p, bool rel = false);
 
     friend std::ostream &operator<<(std::ostream &output, const Symbol &s);
 

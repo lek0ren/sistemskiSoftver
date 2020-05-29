@@ -29,10 +29,10 @@ std::regex reg_symbol_dir("([\\w][\\d\\w]*)$");
 
 std::regex reg_jmp_literal_imm("([\\d]+)$");
 std::regex reg_jmp_symbol_imm("([\\w][\\d\\w]*)$");
-std::regex reg_jmp_reg_dir("\\*%(r([0-7])|pc)(l|h)?$");
-std::regex reg_jmp_reg_ind("\\*\\(%(r([0-7])|pc)\\)$");
-std::regex reg_jmp_literal_reg_off("\\*([\\d]+)\\(%(r[0-7]|pc)\\)$");
-std::regex reg_jmp_symbol_reg_off("\\*([\\w][\\d\\w]*)\\(%(r[0-7]|pc)\\)$");
-std::regex reg_jmp_pc_rel("\\*([\\w][\\d\\w]*)\\(%(r7|pc)\\)$");
+std::regex reg_jmp_reg_dir("\\*%(r([0-6])|pc)(l|h)?$");
+std::regex reg_jmp_reg_ind("\\*\\(%(r([0-6])|pc)\\)$");
+std::regex reg_jmp_literal_reg_off("\\*([\\d]+)\\(%(r([0-6])|pc)\\)$");
+std::regex reg_jmp_symbol_reg_off("\\*([\\w][\\d\\w]*)\\(%(r([0-6])|pc)\\)$");
+std::regex reg_jmp_pc_rel("\\*([\\w][\\d\\w]*)\\((%r7|pc)\\)$");
 std::regex reg_jmp_literal_dir("\\*([\\d]+)$");
 std::regex reg_jmp_symbol_dir("\\*([\\w][\\d\\w]*)$");

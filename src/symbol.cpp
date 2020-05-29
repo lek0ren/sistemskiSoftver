@@ -52,11 +52,6 @@ void Symbol::setNumber(int num)
     this->num = num;
 }
 
-void Symbol::setToGlobal()
-{
-    local = false;
-}
-
 int Symbol::getOffset()
 {
     return offset;
@@ -65,6 +60,11 @@ int Symbol::getOffset()
 std::string Symbol::getName()
 {
     return name;
+}
+
+bool Symbol::getLocal()
+{
+    return local;
 }
 
 int &Symbol::getSection()
@@ -87,10 +87,13 @@ void Symbol::setSection(int &s)
     *section = s;
 }
 
-void Symbol::addPatch(int p)
+void Symbol::addPatch(int p, bool rel)
 {
+
+    // obratiti paznju ako je bila instrukcija skoka da moze da se sabira vrednost
     ST_forwardref ref;
     ref.patch = p;
+    ref.rel = rel;
     ref.section = Assembler::instance().getCurrentSection();
     flink->push_back(ref);
 }

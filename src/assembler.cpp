@@ -306,8 +306,16 @@ void Assembler::backPatch()
     {
         for (auto forw : *(sym.second->flink))
         {
-            forw.section->code->at(forw.patch + 1) = sym.second->getOffset() >> 8;
-            forw.section->code->at(forw.patch) = sym.second->getOffset() & 0xFF;
+            if (forw.rel)
+            {
+                forw.section->code->at(forw.patch + 1) += sym.second->getOffset() >> 8;
+                forw.section->code->at(forw.patch) += sym.second->getOffset() & 0xFF;
+            }
+            else
+            {
+                forw.section->code->at(forw.patch + 1) = sym.second->getOffset() >> 8;
+                forw.section->code->at(forw.patch) = sym.second->getOffset() & 0xFF;
+            }
         }
     }
 }

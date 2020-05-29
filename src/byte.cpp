@@ -28,5 +28,6 @@ Byte::Byte(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>
     {
         // ne valja
     }
+    opCode.erase(opCode.begin(), opCode.begin() + 1);
     size = 1;
 }

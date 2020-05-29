@@ -1,4 +1,5 @@
 #include "../h/symTable.h"
+#include "../h/section.h"
 #include <iostream>
 
 int SymTable::zero = 0;
@@ -43,11 +44,32 @@ void SymTable::print()
               << "\t|"
               << "Defined" << std::endl;
 
-    std::cout << "===============================================" << std::endl;
+    std::cout << "================================================" << std::endl;
     for (auto symbol : *symbols)
     {
         std::cout << *symbol.second << std::endl;
-        std::cout << "===============================================" << std::endl;
+        std::cout << "================================================" << std::endl;
+    }
+
+    std::cout << std::endl
+              << std::endl;
+
+    for (auto symbol : *symbols)
+    {
+        std::shared_ptr<Section> section = std::dynamic_pointer_cast<Section>(symbol.second);
+        if (section)
+        {
+            std::cout << ".rel." << symbol.second->getName() << std::endl;
+            std::cout << "offset\t|      "
+                      << "Type\t| "
+                      << "value\t|  " << std::endl;
+            std::cout << "================================================" << std::endl;
+            for (auto rel : *(section->getRelTable()))
+            {
+                std::cout << *rel << std::endl;
+            }
+            std::cout << std::endl;
+        }
     }
 }
 
