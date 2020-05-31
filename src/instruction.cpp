@@ -76,7 +76,7 @@ std::vector<unsigned char> Instruction::getOpCode()
 Instruction::Instruction(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>> tokens)
 {
     std::smatch match_name;
-    opSize = 2;
+    opSize = 1;
     size = 1;
     opCode = std::vector<unsigned char>();
 
@@ -84,26 +84,27 @@ Instruction::Instruction(std::string name, std::shared_ptr<std::vector<std::shar
     {
         name = match_name[1].str();
         if (match_name[2].str() == "b")
-            opSize = 1;
+            opSize = 0;
     }
 
-    instCode = InstructionCode_[name];
+    instCode = InstructionCode_[name] << 3;
     numOfOp = InstructionOpNum_[name];
+    instCode |= opSize << 2;
     opCode.push_back(instCode);
     std::cout << "instruction :  " << instCode << std::endl;
     operands = std::make_shared<std::vector<Operand>>();
+
     if (name != ".byte" && name != ".word" && name != ".skip")
     {
         if (tokens->size() == numOfOp)
         {
             for (auto &tok : *tokens)
             {
-                Operand op = Operand(tok->getToken());
-                operands->push_back(op);
-
-                if (op.getType() == Operand::Type::SYMBOL_DIR || op.getType() == Operand::Type::SYMBOL_IMM || op.getType() == Operand::Type::SYMBOL_REG_OFF || op.getType() == Operand::Type::JMP_SYMBOL_DIR || op.getType() == Operand::Type::JMP_SYMBOL_IMM || op.getType() == Operand::Type::JMP_SYMBOL_REG_OFF)
+                std::shared_ptr<Operand> op = std::make_shared<Operand>(tok->getToken());
+                operands->push_back(*op);
+                if (op->getType() == Operand::Type::SYMBOL_DIR || op->getType() == Operand::Type::SYMBOL_IMM || op->getType() == Operand::Type::SYMBOL_REG_OFF || op->getType() == Operand::Type::JMP_SYMBOL_DIR || op->getType() == Operand::Type::JMP_SYMBOL_IMM || op->getType() == Operand::Type::JMP_SYMBOL_REG_OFF)
                 {
-                    std::shared_ptr<Symbol> sym = SymTable::instance().getSymbol(op.getName());
+                    std::shared_ptr<Symbol> sym = SymTable::instance().getSymbol(op->getName());
                     std::shared_ptr<Section> currSection = Assembler::instance().getCurrentSection();
                     int symPosition = Assembler::instance().getLocationCounter() + size + 1;
 
@@ -112,7 +113,7 @@ Instruction::Instruction(std::string name, std::shared_ptr<std::vector<std::shar
                         sym->addPatch(symPosition); // +1 jer prvo ide kod adresiranja
                     }
                 }
-                size += op.getSize();
+                size += op->getSize();
             }
         }
         else
@@ -123,6 +124,7 @@ Instruction::Instruction(std::string name, std::shared_ptr<std::vector<std::shar
     else
     {
         numOfOp = 0;
+        size = 0;
         opCode.clear();
         for (auto &tok : *tokens)
         {

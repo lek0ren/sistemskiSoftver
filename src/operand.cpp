@@ -32,6 +32,7 @@ Operand::Operand(std::string name)
     std::smatch m;
     this->name = name;
     size = 1;
+    symbol = "";
 
     int regNum;
     int horl = 0;
@@ -232,7 +233,6 @@ void Operand::extractReg(std::smatch &m)
 
 void Operand::addSymbolToCode(std::string name, std::smatch &m)
 {
-    std::cout << name << std::endl;
     std::shared_ptr<Symbol> sym = SymTable::instance().getSymbol(name);
     if (!sym)
     {
@@ -240,7 +240,8 @@ void Operand::addSymbolToCode(std::string name, std::smatch &m)
         sym = std::make_shared<Symbol>(m.str(1), 0, SymTable::instance().getUND()->getNumber());
         if (SymTable::instance().addSymbol(sym))
         {
-            sym->setNumber(Assembler::instance().numGen++);
+            std::cout << name << std::endl;
+            //sym->setNumber(Assembler::instance().numGen++);
             //relokacija
             opCode[1] = 0x00;
             opCode[2] = 0x00;
@@ -251,5 +252,12 @@ void Operand::addSymbolToCode(std::string name, std::smatch &m)
         opCode[1] = sym->getOffset() & 0xFF;
         opCode[2] = sym->getOffset() >> 8;
     }
+
+    symbol = sym->getName();
     size = 3;
+}
+
+std::string Operand::getSymbolIfExists()
+{
+    return symbol;
 }

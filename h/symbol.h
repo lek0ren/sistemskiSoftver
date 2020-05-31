@@ -19,7 +19,7 @@ protected:
     int num;
     bool local;
     std::string name;
-    int *section;
+    int section;
     bool defined;
     std::shared_ptr<std::vector<ST_forwardref>> flink;
 
@@ -39,7 +39,7 @@ public:
 
     void setName(std::string name);
 
-    void setSection(int &s);
+    void setSection(int s);
 
     std::string getName() const;
 

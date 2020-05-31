@@ -23,7 +23,7 @@ public:
 
     void appendCode(std::vector<unsigned char> opCode);
 
-    void addRelocation(int offset, Relocation::Type type, int value);
+    void addRelocation(int offset, Relocation::Type type, int &value);
 
     std::shared_ptr<std::vector<std::shared_ptr<Relocation>>> getRelTable();
 

@@ -12,18 +12,18 @@ public:
 
 private:
     int offset;
-    int value;
+    int *value;
     Type type;
 
 public:
-    Relocation(int offset, Type type, int &value);
+    Relocation(int offset, Type type, int *value);
 
     int getOffset()
     {
         return offset;
     }
 
-    int getValue()
+    int *getValue()
     {
         return value;
     }

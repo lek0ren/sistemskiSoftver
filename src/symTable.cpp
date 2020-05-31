@@ -1,5 +1,6 @@
 #include "../h/symTable.h"
 #include "../h/section.h"
+#include "../h/assembler.h"
 #include <iostream>
 
 int SymTable::zero = 0;
@@ -9,6 +10,7 @@ bool SymTable::addSymbol(std::shared_ptr<Symbol> s, bool declaration)
     if (symbols->find(s->getName()) == symbols->end())
     {
         symbols->emplace(std::make_pair(s->getName(), s));
+        s->setNumber(Assembler::instance().numGen++);
         return true;
     }
     else if (!symbols->find(s->getName())->second->getDefined() && declaration) //deklarisan kao globalan ali nije definisan

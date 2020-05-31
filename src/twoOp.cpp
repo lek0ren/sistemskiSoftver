@@ -5,22 +5,78 @@
 #include <string>
 #include <iostream>
 #include "../h/assembler.h"
+#include "../h/symTable.h"
 
 TwoOp::TwoOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>> tokens) : Instruction(name, tokens)
 {
     if (operands->size() == 2)
     {
-        if ((*operands)[0].getType() == Operand::Type::JMP_PC_RELATIVE || (*operands)[0].getType() == Operand::Type::JMP_REG_DIR || (*operands)[0].getType() == Operand::Type::JMP_REG_IND || (*operands)[0].getType() == Operand::Type::JMP_SYMBOL_REG_OFF || (*operands)[0].getType() == Operand::Type::JMP_LITERAL_REG_OFF || (*operands)[0].getType() == Operand::Type::JMP_SYMBOL_DIR || (*operands)[0].getType() == Operand::Type::JMP_LITERAL_IMM)
+        for (int i = 0; i < operands->size(); i++)
         {
+            int firstOperandOffset = i == 0 ? 0 : (*operands)[1].getSize() - 1;
+            Operand::Type type = (*operands)[i].getType();
+            if (type == Operand::Type::JMP_PC_RELATIVE || (*operands)[i].getType() == Operand::Type::JMP_REG_DIR || (*operands)[i].getType() == Operand::Type::JMP_REG_IND || (*operands)[i].getType() == Operand::Type::JMP_SYMBOL_REG_OFF || (*operands)[i].getType() == Operand::Type::JMP_LITERAL_REG_OFF || (*operands)[i].getType() == Operand::Type::JMP_SYMBOL_DIR || (*operands)[i].getType() == Operand::Type::JMP_LITERAL_IMM)
+            {
 
-            std::cout << "Greska, neispravan tip operanda! " << (int)(*operands)[0].getType() << std::endl;
-            Assembler::instance().toContinue = false;
-        }
-        if ((*operands)[1].getType() == Operand::Type::JMP_PC_RELATIVE || (*operands)[1].getType() == Operand::Type::JMP_REG_DIR || (*operands)[1].getType() == Operand::Type::JMP_REG_IND || (*operands)[1].getType() == Operand::Type::JMP_SYMBOL_REG_OFF || (*operands)[1].getType() == Operand::Type::JMP_LITERAL_REG_OFF || (*operands)[1].getType() == Operand::Type::JMP_SYMBOL_DIR || (*operands)[1].getType() == Operand::Type::JMP_LITERAL_IMM)
-        {
+                std::cout << "Greska, neispravan tip operanda! " << (int)(*operands)[i].getType() << std::endl;
+                Assembler::instance().toContinue = false;
+            }
+            else if (type == Operand::Type::SYMBOL_DIR || type == Operand::Type::SYMBOL_IMM || type == Operand::Type::SYMBOL_REG_OFF || type == Operand::Type::PC_RELATIVE || type == Operand::Type::JMP_SYMBOL_IMM)
+            { // check whether is correct type
+                std::cout << "Created relocation for " << (*operands)[i].getName() << std::endl;
+                std::shared_ptr<Symbol> sym = SymTable::instance().getSymbol((*operands)[i].getSymbolIfExists());
+                std::shared_ptr<Section> currSection = Assembler::instance().getCurrentSection();
+                int symPosition = Assembler::instance().getLocationCounter() + firstOperandOffset + 2;
+                if (sym)
+                {
+                    if (type == Operand::Type::PC_RELATIVE)
+                    {
+                        //proveri da li moze pc relative i sta da se radi tu
+                        if (sym->getLocal())
+                        {
 
-            std::cout << "Greska, neispravan tip operanda! " << (int)(*operands)[1].getType() << std::endl;
-            Assembler::instance().toContinue = false;
+                            currSection->addRelocation(symPosition, Relocation::Type::R_64_PC, currSection->getNumber());
+                            if (!sym->getDefined())
+                            {
+                                sym->addPatch(symPosition, true);
+                            }
+                            opCode.at(firstOperandOffset + 3) = sym->getOffset() >> 8;
+                            opCode.at(firstOperandOffset + 2) = sym->getOffset() & 0xFF;
+                        }
+                        else
+                        {
+                            currSection->addRelocation(symPosition, Relocation::Type::R_64_PC, sym->getNumber());
+                            if (!sym->getDefined())
+                            {
+                                sym->addPatch(symPosition, true);
+                            }
+                            opCode.at(firstOperandOffset + 3) = 0;
+                            opCode.at(firstOperandOffset + 2) = 0;
+                        }
+                    }
+                    else
+                    {
+                        if (sym->getLocal())
+                        {
+                            currSection->addRelocation(symPosition, Relocation::Type::R_64, currSection->getNumber());
+
+                            opCode.at(firstOperandOffset + 3) = sym->getOffset() >> 8;
+                            opCode.at(firstOperandOffset + 2) = sym->getOffset() & 0xFF;
+                        }
+                        else
+                        {
+                            currSection->addRelocation(symPosition, Relocation::Type::R_64, sym->getNumber());
+                            opCode.at(firstOperandOffset + 3) = 0;
+                            opCode.at(firstOperandOffset + 2) = 0;
+                        }
+                    }
+                }
+                else
+                {
+                    std::cout << "Greska u izvrsavanju\n";
+                    Assembler::instance().toContinue = false;
+                }
+            }
         }
     }
     else

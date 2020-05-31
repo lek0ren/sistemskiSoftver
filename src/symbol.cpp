@@ -5,11 +5,12 @@
 
 std::ostream &operator<<(std::ostream &output, const Symbol &s)
 {
-    output << s.getName() << "\t|  " << *s.section << "\t|  " << s.offset << "\t|  " << (s.local ? "l" : "g") << "\t|  " << s.num << "\t|  " << s.defined << "\t|  ";
+    output << s.getName() << "\t|  " << s.section << "\t|  " << s.offset << "\t|  " << (s.local ? "l" : "g") << "\t|  " << s.num << "\t|  " << s.defined << "\t|  ";
     for (auto f : *(s.flink))
     {
-        std::cout << f.patch << " " << std::endl;
+        output << f.patch << " ";
     }
+    output << std::endl;
     return output;
 }
 
@@ -19,7 +20,7 @@ Symbol::Symbol(std::string name, int off, int &s)
     std::regex_match(name, match_name, reg_labelWout);
     this->name = match_name.str(1);
     offset = off;
-    section = s == -1 ? &num : &s;
+    section = s == -1 ? num : s;
     this->num = 0;
     defined = false;
     flink = std::make_shared<std::vector<ST_forwardref>>();
@@ -69,7 +70,7 @@ bool Symbol::getLocal()
 
 int &Symbol::getSection()
 {
-    return *section;
+    return section;
 }
 
 void Symbol::setOffset(int off)
@@ -82,18 +83,18 @@ void Symbol::setName(std::string name)
     this->name = name;
 }
 
-void Symbol::setSection(int &s)
+void Symbol::setSection(int s)
 {
-    *section = s;
+    section = s;
 }
 
 void Symbol::addPatch(int p, bool rel)
 {
-
     // obratiti paznju ako je bila instrukcija skoka da moze da se sabira vrednost
-    ST_forwardref ref;
-    ref.patch = p;
-    ref.rel = rel;
-    ref.section = Assembler::instance().getCurrentSection();
-    flink->push_back(ref);
+    std::shared_ptr<ST_forwardref> ref = std::make_shared<ST_forwardref>();
+    ref->patch = p;
+    ref->rel = rel;
+    ref->section = Assembler::instance().getCurrentSection();
+    flink->push_back(*ref);
+    std::cout << "dodat patch u " << name << " i velicina je " << flink->size() << '\n';
 }

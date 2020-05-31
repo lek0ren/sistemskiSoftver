@@ -3,9 +3,11 @@
 #include "../h/operand.h"
 #include "../h/util.h"
 #include <string>
+#include <iostream>
 
 Skip::Skip(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>> tokens) : Instruction(name, tokens)
 {
+
     opCode.clear();
     if (operands->size() == 1)
     {

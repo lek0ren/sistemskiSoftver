@@ -59,7 +59,15 @@ void Assembler::assembly()
 
     while (std::getline(infile, line) && toContinue)
     {
+
+        std::smatch m;
         //proveriti regexom da li je dobra struktura linije, da li postoje svi ,
+
+        if (std::regex_match(line, m, reg_emtpy_line))
+        {
+            std::cout << "prazna linija\n";
+            continue;
+        }
 
         tokens->clear();
 
@@ -76,11 +84,10 @@ void Assembler::assembly()
 
         //prepoznati koja je instrukcija u pitanju
 
-        std::smatch m;
         std::string start = (*tokens)[0]->getToken();
 
         //prepoznavanje .global
-        if (std::regex_search(start, m, reg_global))
+        if (std::regex_match(start, m, reg_global))
         {
             if (tokens->size() >= 2)
             {
@@ -89,7 +96,7 @@ void Assembler::assembly()
                     std::shared_ptr<Symbol> symGlob;
                     if (!currSection)
                     {
-                        symGlob = std::make_shared<Symbol>((*tokens)[i]->getToken(), locationCounter, zero);
+                        symGlob = std::make_shared<Symbol>((*tokens)[i]->getToken(), locationCounter, Assembler::zero);
                         if (!SymTable::instance().addSymbol(symGlob))
                         {
                             toContinue = false;
@@ -108,8 +115,9 @@ void Assembler::assembly()
         }
 
         //prepoznavanje .extern
-        if (std::regex_search(start, m, reg_extern))
+        if (std::regex_match(start, m, reg_extern))
         {
+
             if (tokens->size() >= 2)
             {
                 for (int i = 1; i < tokens->size(); i++)
@@ -127,23 +135,24 @@ void Assembler::assembly()
                         else
                         {
                             symExtern->setToGlobal();
-                            symExtern->setNumber(numGen++);
+                            //symExtern->setNumber(numGen++);
                         }
                     }
                 }
                 tokens->clear();
             }
         }
-
         //prepoznavanje sekcija
-        if (std::regex_search(start, m, reg_section))
+        if (std::regex_match(start, m, reg_section))
         {
+            std::cout << "ovde2\n";
             std::shared_ptr<Section> newSection;
             if (currSection)
             {
                 currSection->setSize(locationCounter);
                 locationCounter = 0;
                 sections->push_back(currSection);
+                std::cout << "changing curr section\n";
             }
             newSection = std::make_shared<Section>((*tokens)[1]->getToken(), 0, undNum);
             if (!SymTable::instance().addSymbol(newSection))
@@ -155,7 +164,7 @@ void Assembler::assembly()
             else
             {
                 newSection->setDefined();
-                newSection->setNumber(numGen++);
+                //newSection->setNumber(numGen++);
             }
             currSection = newSection;
             if (tokens->size() > 2)
@@ -165,11 +174,12 @@ void Assembler::assembly()
                 break;
             }
             tokens->clear();
+            start = "";
             //ne sme nista drugo da ostane, da se proveri
         }
 
         //prepoznavanje labela
-        if (std::regex_search(start, m, reg_label))
+        if (std::regex_match(start, m, reg_label))
         {
             std::shared_ptr<Symbol> symLabel;
             if (currSection)
@@ -188,7 +198,7 @@ void Assembler::assembly()
                     symLabel = SymTable::instance().getSymbol(match_name.str(1));
                     symLabel->setDefined();
                     symLabel->setSection(currSection->getNumber());
-                    symLabel->setNumber(numGen++);
+                    //symLabel->setNumber(numGen++);
                 }
                 tokens->erase(tokens->begin());
             }
@@ -201,7 +211,7 @@ void Assembler::assembly()
             }
         }
 
-        if (std::regex_search(start, m, reg_end))
+        if (std::regex_match(start, m, reg_end))
         {
             currSection->setSize(locationCounter);
             sections->push_back(currSection);
@@ -210,6 +220,7 @@ void Assembler::assembly()
             {
                 //err
             }
+            continue;
         }
 
         if (std::regex_match(start, m, reg_equ))
@@ -262,6 +273,7 @@ void Assembler::assembly()
             std::vector<unsigned char> instCode = instruction->getOpCode();
             for (int i = 0; i < instruction->getSize(); i++)
             {
+
                 if (i == 0)
                 {
                     std::cout << "instrukcija " << start << ": \t";
@@ -308,8 +320,10 @@ void Assembler::backPatch()
         {
             if (forw.rel)
             {
-                forw.section->code->at(forw.patch + 1) += sym.second->getOffset() >> 8;
-                forw.section->code->at(forw.patch) += sym.second->getOffset() & 0xFF;
+                int number = forw.section->code->at(forw.patch) | forw.section->code->at(forw.patch + 1) << 8;
+                number += sym.second->getOffset();
+                forw.section->code->at(forw.patch) = number & 0xff;
+                forw.section->code->at(forw.patch + 1) = number >> 8;
             }
             else
             {

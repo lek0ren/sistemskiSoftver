@@ -1,6 +1,7 @@
 #pragma once
 #include <regex>
 
+extern std::regex reg_emtpy_line;
 extern std::regex reg_section;
 extern std::regex reg_label;
 extern std::regex reg_labelWout;

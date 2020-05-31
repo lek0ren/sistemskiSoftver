@@ -32,6 +32,7 @@ private:
     unsigned char opCode[3];
     int size;
     std::string name;
+    std::string symbol;
 
     void extractLiteralAndOffset(std::smatch &s);
     void extractLiteral(std::smatch &s);
@@ -50,5 +51,6 @@ public:
     int getType(int i);
     Type getType();
     int getSize();
+    std::string getSymbolIfExists();
     std::string getName();
 };

@@ -27,9 +27,9 @@ std::ostream &operator<<(std::ostream &output, const Section &s)
     return output;
 }
 
-void Section::addRelocation(int offset, Relocation::Type type, int value)
+void Section::addRelocation(int offset, Relocation::Type type, int &value)
 {
-    relocations->push_back(std::make_shared<Relocation>(offset, type, value));
+    relocations->push_back(std::make_shared<Relocation>(offset, type, &value));
 }
 
 std::shared_ptr<std::vector<std::shared_ptr<Relocation>>> Section::getRelTable()
