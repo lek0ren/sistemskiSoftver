@@ -35,7 +35,7 @@ TwoOp::TwoOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token
                         if (sym->getLocal())
                         {
 
-                            currSection->addRelocation(symPosition, Relocation::Type::R_64_PC, currSection->getNumber());
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, currSection->getNumber());
                             if (!sym->getDefined())
                             {
                                 sym->addPatch(symPosition, true);
@@ -45,7 +45,7 @@ TwoOp::TwoOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token
                         }
                         else
                         {
-                            currSection->addRelocation(symPosition, Relocation::Type::R_64_PC, sym->getNumber());
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getNumber());
                             if (!sym->getDefined())
                             {
                                 sym->addPatch(symPosition, true);
@@ -58,14 +58,14 @@ TwoOp::TwoOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token
                     {
                         if (sym->getLocal())
                         {
-                            currSection->addRelocation(symPosition, Relocation::Type::R_64, currSection->getNumber());
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16, currSection->getNumber());
 
                             opCode.at(firstOperandOffset + 3) = sym->getOffset() >> 8;
                             opCode.at(firstOperandOffset + 2) = sym->getOffset() & 0xFF;
                         }
                         else
                         {
-                            currSection->addRelocation(symPosition, Relocation::Type::R_64, sym->getNumber());
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getNumber());
                             opCode.at(firstOperandOffset + 3) = 0;
                             opCode.at(firstOperandOffset + 2) = 0;
                         }

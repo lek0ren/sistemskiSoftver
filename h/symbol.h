@@ -14,6 +14,7 @@ protected:
         int patch;
         std::shared_ptr<Section> section;
         bool rel = false;
+        bool twoByte = true;
     };
     int offset;
     int num;
@@ -55,7 +56,7 @@ public:
 
     int &getSection();
 
-    void addPatch(int p, bool rel = false);
+    void addPatch(int p, bool rel = false, bool twoByte = true);
 
     friend std::ostream &operator<<(std::ostream &output, const Symbol &s);
 

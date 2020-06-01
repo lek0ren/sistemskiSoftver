@@ -6,7 +6,7 @@
     .byte labela, l1, l3, l4
 .section text:
     push (%r2)
-   l1:.byte 150
-    l3:.word l3, 20
+   l1: .byte 150
+    l3: .word l3, 20
 labela:
 .end

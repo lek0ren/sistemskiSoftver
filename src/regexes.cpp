@@ -24,7 +24,7 @@ std::regex reg_reg_dir("%r(([0-6]))(l|h)?$");
 std::regex reg_reg_ind("\\(%(r([0-6]))\\)$");
 std::regex reg_literal_reg_off("([\\d]+)\\(%(r([0-6]))\\)$"); //mozda treba b 2 puta da se esc
 std::regex reg_symbol_reg_off("([\\w][\\d\\w]*)\\(%(r([0-6]))\\)$");
-std::regex reg_pc_rel("([\\w][\\d\\w]*)\\(%(r7|%pc)\\)$");
+std::regex reg_pc_rel("([\\w][\\d\\w]*)\\(%(r7|pc)\\)$");
 std::regex reg_literal_dir("([\\d]+)$");
 std::regex reg_symbol_dir("([\\w][\\d\\w]*)$");
 

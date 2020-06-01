@@ -1,2 +1,2 @@
 make
-./build/output kod.s
+./build/output test2.s

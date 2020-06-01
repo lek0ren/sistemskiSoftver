@@ -327,7 +327,8 @@ void Assembler::backPatch()
             }
             else
             {
-                forw.section->code->at(forw.patch + 1) = sym.second->getOffset() >> 8;
+                if (forw.twoByte)
+                    forw.section->code->at(forw.patch + 1) = sym.second->getOffset() >> 8;
                 forw.section->code->at(forw.patch) = sym.second->getOffset() & 0xFF;
             }
         }

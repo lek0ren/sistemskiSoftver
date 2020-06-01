@@ -32,7 +32,7 @@ JmpInst::JmpInst(std::string name, std::shared_ptr<std::vector<std::shared_ptr<T
                         if (sym->getLocal())
                         {
 
-                            currSection->addRelocation(symPosition, Relocation::Type::R_64_PC, currSection->getNumber());
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, currSection->getNumber());
                             if (!sym->getDefined())
                             {
                                 sym->addPatch(symPosition, true);
@@ -42,7 +42,7 @@ JmpInst::JmpInst(std::string name, std::shared_ptr<std::vector<std::shared_ptr<T
                         }
                         else
                         {
-                            currSection->addRelocation(symPosition, Relocation::Type::R_64_PC, sym->getNumber());
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getNumber());
                             if (!sym->getDefined())
                             {
                                 sym->addPatch(symPosition, true);
@@ -55,11 +55,11 @@ JmpInst::JmpInst(std::string name, std::shared_ptr<std::vector<std::shared_ptr<T
                     {
                         if (sym->getLocal())
                         {
-                            currSection->addRelocation(symPosition, Relocation::Type::R_64, sym->getSection());
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getSection());
                         }
                         else
                         {
-                            currSection->addRelocation(symPosition, Relocation::Type::R_64, sym->getNumber());
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getNumber());
                         }
 
                         opCode.at(3) = sym->getOffset() >> 8;

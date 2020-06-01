@@ -14,8 +14,8 @@ add $2,a
 add $2,c
 jmp *c(%r7)
 call *labela
-c: .byte 2
-simbol: .word 9
+c: .byte a, simbol
+simbol: .word a, simbol
 labela: .skip 4
 .section .bssa:
 

@@ -6,8 +6,9 @@ class Relocation
 public:
     enum class Type
     {
-        R_64 = 0,
-        R_64_PC
+        R_16 = 0,
+        R_16_PC,
+        R_8
     };
 
 private:

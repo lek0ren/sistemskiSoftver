@@ -88,12 +88,13 @@ void Symbol::setSection(int s)
     section = s;
 }
 
-void Symbol::addPatch(int p, bool rel)
+void Symbol::addPatch(int p, bool rel, bool twoByte)
 {
     // obratiti paznju ako je bila instrukcija skoka da moze da se sabira vrednost
     std::shared_ptr<ST_forwardref> ref = std::make_shared<ST_forwardref>();
     ref->patch = p;
     ref->rel = rel;
+    ref->twoByte = twoByte;
     ref->section = Assembler::instance().getCurrentSection();
     flink->push_back(*ref);
     std::cout << "dodat patch u " << name << " i velicina je " << flink->size() << '\n';
