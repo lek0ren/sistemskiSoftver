@@ -22,6 +22,7 @@ protected:
     std::string name;
     int section;
     bool defined;
+    bool apsRelocatable = false;
     std::shared_ptr<std::vector<ST_forwardref>> flink;
 
 public:
@@ -51,6 +52,10 @@ public:
     int getOffset();
 
     bool getLocal();
+
+    void setApsRelocatable();
+
+    bool getApsRelocatable();
 
     std::string getName();
 

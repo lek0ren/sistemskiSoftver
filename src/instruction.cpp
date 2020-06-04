@@ -102,7 +102,7 @@ Instruction::Instruction(std::string name, std::shared_ptr<std::vector<std::shar
             {
                 std::shared_ptr<Operand> op = std::make_shared<Operand>(tok->getToken());
                 operands->push_back(*op);
-                if (op->getType() == Operand::Type::SYMBOL_DIR || op->getType() == Operand::Type::SYMBOL_IMM || op->getType() == Operand::Type::SYMBOL_REG_OFF || op->getType() == Operand::Type::JMP_SYMBOL_DIR || op->getType() == Operand::Type::JMP_SYMBOL_IMM || op->getType() == Operand::Type::JMP_SYMBOL_REG_OFF)
+                /*if (op->getType() == Operand::Type::SYMBOL_DIR || op->getType() == Operand::Type::SYMBOL_IMM || op->getType() == Operand::Type::SYMBOL_REG_OFF || op->getType() == Operand::Type::JMP_SYMBOL_DIR || op->getType() == Operand::Type::JMP_SYMBOL_IMM || op->getType() == Operand::Type::JMP_SYMBOL_REG_OFF)
                 {
                     std::shared_ptr<Symbol> sym = SymTable::instance().getSymbol(op->getName());
                     std::shared_ptr<Section> currSection = Assembler::instance().getCurrentSection();
@@ -112,7 +112,7 @@ Instruction::Instruction(std::string name, std::shared_ptr<std::vector<std::shar
                     {
                         sym->addPatch(symPosition); // +1 jer prvo ide kod adresiranja
                     }
-                }
+                }*/
                 size += op->getSize();
             }
         }

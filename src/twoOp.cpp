@@ -13,7 +13,7 @@ TwoOp::TwoOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token
     {
         for (int i = 0; i < operands->size(); i++)
         {
-            int firstOperandOffset = i == 0 ? 0 : (*operands)[1].getSize() - 1;
+            int firstOperandOffset = i == 0 ? 0 : (*operands)[1].getSize();
             Operand::Type type = (*operands)[i].getType();
             if (type == Operand::Type::JMP_PC_RELATIVE || (*operands)[i].getType() == Operand::Type::JMP_REG_DIR || (*operands)[i].getType() == Operand::Type::JMP_REG_IND || (*operands)[i].getType() == Operand::Type::JMP_SYMBOL_REG_OFF || (*operands)[i].getType() == Operand::Type::JMP_LITERAL_REG_OFF || (*operands)[i].getType() == Operand::Type::JMP_SYMBOL_DIR || (*operands)[i].getType() == Operand::Type::JMP_LITERAL_IMM)
             {
@@ -31,17 +31,20 @@ TwoOp::TwoOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token
                 {
                     if (type == Operand::Type::PC_RELATIVE)
                     {
+                        int toRemove = i == 0 ? (*operands)[1].getSize() : 0;
+                        toRemove += 2;
+                        std::cout << "oper 1 " << toRemove << std::endl;
                         //proveri da li moze pc relative i sta da se radi tu
                         if (sym->getLocal())
                         {
 
-                            currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, currSection->getNumber());
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getSection());
                             if (!sym->getDefined())
                             {
                                 sym->addPatch(symPosition, true);
                             }
-                            opCode.at(firstOperandOffset + 3) = sym->getOffset() >> 8;
-                            opCode.at(firstOperandOffset + 2) = sym->getOffset() & 0xFF;
+                            opCode.at(firstOperandOffset + 3) = (sym->getOffset() - toRemove) >> 8;
+                            opCode.at(firstOperandOffset + 2) = (sym->getOffset() - toRemove) & 0xFF;
                         }
                         else
                         {
@@ -50,24 +53,31 @@ TwoOp::TwoOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token
                             {
                                 sym->addPatch(symPosition, true);
                             }
-                            opCode.at(firstOperandOffset + 3) = 0;
-                            opCode.at(firstOperandOffset + 2) = 0;
+                            opCode.at(firstOperandOffset + 3) = (sym->getOffset() - toRemove) >> 8;
+                            opCode.at(firstOperandOffset + 2) = (sym->getOffset() - toRemove) & 0xFF;
                         }
                     }
                     else
                     {
                         if (sym->getLocal())
                         {
-                            currSection->addRelocation(symPosition, Relocation::Type::R_16, currSection->getNumber());
-
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getSection());
+                            if (!sym->getDefined())
+                            {
+                                sym->addPatch(symPosition);
+                            }
                             opCode.at(firstOperandOffset + 3) = sym->getOffset() >> 8;
                             opCode.at(firstOperandOffset + 2) = sym->getOffset() & 0xFF;
                         }
                         else
                         {
                             currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getNumber());
-                            opCode.at(firstOperandOffset + 3) = 0;
-                            opCode.at(firstOperandOffset + 2) = 0;
+                            if (!sym->getDefined())
+                            {
+                                sym->addPatch(symPosition);
+                            }
+                            opCode.at(firstOperandOffset + 3) = sym->getOffset() >> 8;
+                            opCode.at(firstOperandOffset + 2) = sym->getOffset() & 0xFF;
                         }
                     }
                 }

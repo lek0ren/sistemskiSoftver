@@ -64,6 +64,7 @@ Operand::Operand(std::string name)
     else if (std::regex_match(name, m, reg_literal_imm))
     {
         type = Type::LITERAL_IMM;
+        size = 2;
         extractLiteral(m);
     }
     else if (std::regex_match(name, m, reg_symbol_imm))
@@ -192,15 +193,9 @@ void Operand::extractLiteralAndOffset(std::smatch &m)
 }
 void Operand::extractLiteral(std::smatch &m)
 {
-    if (std::stoi(m[1].str()) > 255)
-    {
-        size = 3;
-        opCode[2] = std::stoi(m[1].str()) >> 8;
-    }
-    else
-    {
-        size = 2;
-    }
+
+    size = 3;
+    opCode[2] = std::stoi(m[1].str()) >> 8;
     opCode[1] = std::stoi(m[1].str()) & 0xff;
 }
 void Operand::extractSymbolAndOffset(std::smatch &m)

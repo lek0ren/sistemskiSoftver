@@ -1,10 +1,12 @@
 #include "../h/symbol.h"
 #include "../h/section.h"
 #include "../h/assembler.h"
+#include "../h/util.h"
 #include <iostream>
 
 std::ostream &operator<<(std::ostream &output, const Symbol &s)
 {
+    output << std::dec;
     output << s.getName() << "\t|  " << s.section << "\t|  " << s.offset << "\t|  " << (s.local ? "l" : "g") << "\t|  " << s.num << "\t|  " << s.defined << "\t|  ";
     for (auto f : *(s.flink))
     {
@@ -20,7 +22,7 @@ Symbol::Symbol(std::string name, int off, int &s)
     std::regex_match(name, match_name, reg_labelWout);
     this->name = match_name.str(1);
     offset = off;
-    section = s == -1 ? num : s;
+    section = s;
     this->num = 0;
     defined = false;
     flink = std::make_shared<std::vector<ST_forwardref>>();
@@ -49,7 +51,10 @@ void Symbol::setDefined()
 
 void Symbol::setNumber(int num)
 {
-
+    if (section == -1)
+    {
+        section = num;
+    }
     this->num = num;
 }
 
@@ -98,4 +103,14 @@ void Symbol::addPatch(int p, bool rel, bool twoByte)
     ref->section = Assembler::instance().getCurrentSection();
     flink->push_back(*ref);
     std::cout << "dodat patch u " << name << " i velicina je " << flink->size() << '\n';
+}
+
+void Symbol::setApsRelocatable()
+{
+    apsRelocatable = true;
+}
+
+bool Symbol::getApsRelocatable()
+{
+    return apsRelocatable;
 }

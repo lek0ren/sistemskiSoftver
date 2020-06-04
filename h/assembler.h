@@ -50,6 +50,8 @@ public:
 
     int getLocationCounter();
 
+    bool createEquSymbol(std::string start, std::shared_ptr<std::vector<std::shared_ptr<Token>>> tokens);
+
     void print();
 
     void backPatch();

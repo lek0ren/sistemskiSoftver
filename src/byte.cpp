@@ -37,7 +37,7 @@ Byte::Byte(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>
                     if (sym->getLocal())
                     {
 
-                        currSection->addRelocation(symPosition, Relocation::Type::R_8, currSection->getNumber());
+                        currSection->addRelocation(symPosition, Relocation::Type::R_8, sym->getSection());
                         if (!sym->getDefined())
                         {
                             sym->addPatch(symPosition, false, false);

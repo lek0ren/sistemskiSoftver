@@ -14,6 +14,7 @@
 #include "../h/oneOp.h"
 #include "../h/twoOp.h"
 #include "../h/noOp.h"
+#include "../h/tableOfUnSym.h"
 
 bool Assembler::setOutputFile(char *output)
 {
@@ -225,10 +226,19 @@ void Assembler::assembly()
 
         if (std::regex_match(start, m, reg_equ))
         {
+            start = tokens->at(1)->getToken();
+            std::string equSym;
+            //proveriti da li je izraz ispravan!!!!!!!!!
+            if (std::regex_match(start, m, reg_labelWout))
+            {
+                std::cout << "Usao ovde 2\n";
+                tokens->erase(tokens->begin(), tokens->begin() + 2);
+                std::shared_ptr<std::vector<std::shared_ptr<Token>>> __tokens = std::make_shared<std::vector<std::shared_ptr<Token>>>(*tokens);
+                createEquSymbol(start, __tokens);
+            }
 
             std::cout << "Usao ovde 1\n";
             //preskaci za sata
-            tokens->clear();
         }
         //prepoznavanje instrukcija
         if (!tokens->empty())
@@ -285,9 +295,36 @@ void Assembler::assembly()
         }
         delete token;
     }
-    backPatch();
-    SymTable::instance().print();
-    print();
+
+    bool changed = true;
+    while (changed)
+    {
+        changed = false;
+        std::vector<std::shared_ptr<Symbol>> toRemove;
+        for (auto &unsolvedSym : *(TableOfUnSym::instance().symbols))
+        {
+            std::cout << unsolvedSym.first->name << std::endl;
+            if (createEquSymbol(unsolvedSym.first->name, unsolvedSym.second))
+            {
+                changed = true;
+                toRemove.push_back(unsolvedSym.first);
+            }
+        }
+        for (auto s : toRemove)
+        {
+            TableOfUnSym::instance().removeSymbol(s);
+        }
+    }
+    if (!TableOfUnSym::instance().symbols->empty())
+    {
+        std::cout << "ERROR\n";
+    }
+    else
+    {
+        backPatch();
+        SymTable::instance().print();
+        print();
+    }
 }
 
 int Assembler::getLocationCounter()
@@ -333,4 +370,75 @@ void Assembler::backPatch()
             }
         }
     }
+}
+
+bool Assembler::createEquSymbol(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>> __tokens)
+{
+    std::shared_ptr<Symbol> sym = SymTable::instance().getSymbol(name);
+    std::smatch m;
+    int value = 0;
+    if (!sym)
+    {
+        sym = std::make_shared<Symbol>(name, 0, SymTable::instance().getUND()->getNumber());
+        if (!SymTable::instance().addSymbol(sym))
+        {
+            //ispisi gresku
+        }
+    }
+    std::shared_ptr<Symbol> exprSymbol;
+
+    std::string sign = "+";
+    for (auto token : *__tokens)
+    {
+        std::string tok = token->getToken();
+        std::cout << value << " " << tok << std::endl;
+        if (tok == "+" || tok == "-")
+        {
+            sign = tok;
+        }
+        else
+        {
+            if (std::regex_match(tok, m, reg_literal_dir))
+            {
+                if (sign == "+")
+                {
+                    value += stoi(m[1].str());
+                }
+                else
+                {
+                    value -= stoi(m[1].str());
+                }
+            }
+            else if (std::regex_match(tok, m, reg_symbol_dir))
+            {
+
+                exprSymbol = SymTable::instance().getSymbol(tok);
+                if (exprSymbol)
+                {
+                    if (!exprSymbol->getDefined())
+                    {
+                        TableOfUnSym::instance().addSymbol(sym, __tokens);
+                        return false;
+                    }
+                    if (sign == "+")
+                    {
+                        value += exprSymbol->getOffset();
+                    }
+                    else
+                    {
+                        value -= exprSymbol->getOffset();
+                    }
+                }
+                else
+                {
+                    TableOfUnSym::instance().addSymbol(sym, __tokens);
+                    return false;
+                }
+            }
+        }
+    }
+    std::cout << value << std::endl;
+    sym->setOffset(value);
+
+    return true;
 }

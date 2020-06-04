@@ -22,13 +22,13 @@ Word::Word(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>
                 unsigned char *operandCode = (*operands)[i].getOpCode();
                 std::cout << "op 0 " << hex(operandCode[0]) << " op 1 " << hex(operandCode[1]) << " op 2 " << hex(operandCode[2]) << std::endl;
                 opCode.at(2 * i) = operandCode[1];
-                if (operandCode[1] < 255)
+                if (operandCode[2] > 0)
                 {
-                    opCode.at(2 * i) = 0;
+                    opCode.at(2 * i + 1) = operandCode[2];
                 }
                 else
                 {
-                    opCode.at(2 * i + 1) = operandCode[2];
+                    opCode.at(2 * i + 1) = 0;
                 }
             }
             else if (type == Operand::Type::SYMBOL_DIR || type == Operand::Type::SYMBOL_IMM || type == Operand::Type::SYMBOL_REG_OFF || type == Operand::Type::PC_RELATIVE || type == Operand::Type::JMP_SYMBOL_IMM)
@@ -42,7 +42,7 @@ Word::Word(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>
                     if (sym->getLocal())
                     {
 
-                        currSection->addRelocation(symPosition, Relocation::Type::R_8, currSection->getNumber());
+                        currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getSection());
                         if (!sym->getDefined())
                         {
                             sym->addPatch(symPosition, false, false);
@@ -52,7 +52,7 @@ Word::Word(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>
                     }
                     else
                     {
-                        currSection->addRelocation(symPosition, Relocation::Type::R_8, sym->getNumber());
+                        currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getNumber());
                         if (!sym->getDefined())
                         {
                             sym->addPatch(symPosition, false, false);
