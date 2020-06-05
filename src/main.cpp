@@ -8,20 +8,33 @@
 
 int main(int argc, char *argv[])
 {
-    
-    if (argc < 2)
+
+    if (argc < 4)
     {
-        std::cout << "Nema dovoljno argumenata"<< std::endl;
+        std::cout << "Nema dovoljno argumenata" << std::endl;
     }
     else
     {
-        char *inputFIle = argv[1];
-        bool ok = Assembler::instance().setInputFile(inputFIle);
-
-
-        if(ok){
+        char *inputFIle, *outputFile;
+        for (int i = 1; i < 4; i++)
+        {
+            if (argv[i] == std::string("-o"))
+            {
+                outputFile = argv[i + 1];
+                i++;
+            }
+            else
+            {
+                inputFIle = argv[i];
+            }
+        }
+        bool ok1 = Assembler::instance().setInputFile(inputFIle);
+        bool ok2 = Assembler::instance().setOutputFile(outputFile);
+        if (ok1)
+        {
             Assembler::instance().assembly();
         }
+        std::cout << "output file " << outputFile << std::endl;
     }
     return 0;
 }

@@ -24,7 +24,7 @@ Symbol::Symbol(std::string name, int off, int &s)
     offset = off;
     section = s;
     this->num = 0;
-    defined = false;
+    defined = 0;
     flink = std::make_shared<std::vector<ST_forwardref>>();
     local = true;
 }
@@ -36,7 +36,7 @@ int &Symbol::getNumber()
 
 bool Symbol::getDefined()
 {
-    return defined;
+    return defined != 0;
 }
 
 std::string Symbol::getName() const
@@ -46,7 +46,12 @@ std::string Symbol::getName() const
 
 void Symbol::setDefined()
 {
-    defined = true;
+    defined = 1;
+}
+
+void Symbol::setDefined(int i)
+{
+    defined = 2;
 }
 
 void Symbol::setNumber(int num)

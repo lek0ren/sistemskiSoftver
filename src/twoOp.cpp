@@ -15,7 +15,12 @@ TwoOp::TwoOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token
         {
             int firstOperandOffset = i == 0 ? 0 : (*operands)[1].getSize();
             Operand::Type type = (*operands)[i].getType();
-            if (type == Operand::Type::JMP_PC_RELATIVE || (*operands)[i].getType() == Operand::Type::JMP_REG_DIR || (*operands)[i].getType() == Operand::Type::JMP_REG_IND || (*operands)[i].getType() == Operand::Type::JMP_SYMBOL_REG_OFF || (*operands)[i].getType() == Operand::Type::JMP_LITERAL_REG_OFF || (*operands)[i].getType() == Operand::Type::JMP_SYMBOL_DIR || (*operands)[i].getType() == Operand::Type::JMP_LITERAL_IMM)
+            if (i == 0 && (type == Operand::Type::LITERAL_IMM || type == Operand::Type::SYMBOL_IMM))
+            {
+                std::cout << "Greska, neispravan tip operanda! " << (int)(*operands)[i].getType() << std::endl;
+                Assembler::instance().toContinue = false;
+            }
+            else if (type == Operand::Type::JMP_PC_RELATIVE || (*operands)[i].getType() == Operand::Type::JMP_REG_DIR || (*operands)[i].getType() == Operand::Type::JMP_REG_IND || (*operands)[i].getType() == Operand::Type::JMP_SYMBOL_REG_OFF || (*operands)[i].getType() == Operand::Type::JMP_LITERAL_REG_OFF || (*operands)[i].getType() == Operand::Type::JMP_SYMBOL_DIR || (*operands)[i].getType() == Operand::Type::JMP_LITERAL_IMM)
             {
 
                 std::cout << "Greska, neispravan tip operanda! " << (int)(*operands)[i].getType() << std::endl;
@@ -38,20 +43,29 @@ TwoOp::TwoOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token
                         if (sym->getLocal())
                         {
 
-                            currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getSection());
                             if (!sym->getDefined())
                             {
+                                currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16_PC, sym->getSection());
                                 sym->addPatch(symPosition, true);
+                            }
+                            else
+                            {
+                                currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getSection());
                             }
                             opCode.at(firstOperandOffset + 3) = (sym->getOffset() - toRemove) >> 8;
                             opCode.at(firstOperandOffset + 2) = (sym->getOffset() - toRemove) & 0xFF;
                         }
                         else
                         {
-                            currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getNumber());
+
                             if (!sym->getDefined())
                             {
+                                currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16_PC, sym->getNumber());
                                 sym->addPatch(symPosition, true);
+                            }
+                            else
+                            {
+                                currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getNumber());
                             }
                             opCode.at(firstOperandOffset + 3) = (sym->getOffset() - toRemove) >> 8;
                             opCode.at(firstOperandOffset + 2) = (sym->getOffset() - toRemove) & 0xFF;
@@ -61,20 +75,30 @@ TwoOp::TwoOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token
                     {
                         if (sym->getLocal())
                         {
-                            currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getSection());
+
                             if (!sym->getDefined())
                             {
+                                currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16, sym->getSection());
                                 sym->addPatch(symPosition);
+                            }
+                            else
+                            {
+                                currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getSection());
                             }
                             opCode.at(firstOperandOffset + 3) = sym->getOffset() >> 8;
                             opCode.at(firstOperandOffset + 2) = sym->getOffset() & 0xFF;
                         }
                         else
                         {
-                            currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getNumber());
+
                             if (!sym->getDefined())
                             {
+                                currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16, sym->getNumber());
                                 sym->addPatch(symPosition);
+                            }
+                            else
+                            {
+                                currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getNumber());
                             }
                             opCode.at(firstOperandOffset + 3) = sym->getOffset() >> 8;
                             opCode.at(firstOperandOffset + 2) = sym->getOffset() & 0xFF;

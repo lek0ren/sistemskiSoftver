@@ -30,20 +30,30 @@ OneOp::OneOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token
                     //proveri da li moze pc relative i sta da se radi tu
                     if (sym->getLocal())
                     {
-                        currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getSection());
+
                         if (!sym->getDefined())
                         {
+                            currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16_PC, sym->getSection());
                             sym->addPatch(symPosition, true);
+                        }
+                        else
+                        {
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getSection());
                         }
                         opCode.at(3) = sym->getOffset() >> 8;
                         opCode.at(2) = sym->getOffset() & 0xFF;
                     }
                     else
                     {
-                        currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getNumber());
+
                         if (!sym->getDefined())
                         {
+                            currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16_PC, sym->getNumber());
                             sym->addPatch(symPosition, true);
+                        }
+                        else
+                        {
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getNumber());
                         }
                         opCode.at(3) = sym->getOffset() >> 8;
                         opCode.at(2) = sym->getOffset() & 0xFF;
@@ -53,21 +63,29 @@ OneOp::OneOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token
                 {
                     if (sym->getLocal())
                     {
-
-                        currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getSection());
                         if (!sym->getDefined())
                         {
+                            currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16, sym->getSection());
                             sym->addPatch(symPosition);
+                        }
+                        else
+                        {
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getSection());
                         }
                         opCode.at(3) = sym->getOffset() >> 8;
                         opCode.at(2) = sym->getOffset() & 0xFF;
                     }
                     else
                     {
-                        currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getNumber());
+
                         if (!sym->getDefined())
                         {
+                            currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16, sym->getNumber());
                             sym->addPatch(symPosition);
+                        }
+                        else
+                        {
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getNumber());
                         }
                         opCode.at(3) = 0;
                         opCode.at(2) = 0;

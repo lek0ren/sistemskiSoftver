@@ -21,7 +21,7 @@ bool Assembler::setOutputFile(char *output)
     outfile.open(output);
     if (!outfile.is_open())
     {
-        std::cout << "Fajl sa imenom" << output << " ne postoji!" << std::endl;
+        std::cout << "Fajl sa imenom " << output << " ne postoji!" << std::endl;
         return false;
     }
     return true;
@@ -32,7 +32,7 @@ bool Assembler::setInputFile(char *input)
     infile.open(input);
     if (!infile.is_open())
     {
-        std::cout << "Fajl sa imenom" << input << " ne postoji!" << std::endl;
+        std::cout << "Fajl sa imenom " << input << " ne postoji!" << std::endl;
         return false;
     }
     return true;
@@ -136,6 +136,7 @@ void Assembler::assembly()
                         else
                         {
                             symExtern->setToGlobal();
+                            symExtern->setDefined();
                             //symExtern->setNumber(numGen++);
                         }
                     }
@@ -236,7 +237,7 @@ void Assembler::assembly()
                 std::shared_ptr<std::vector<std::shared_ptr<Token>>> __tokens = std::make_shared<std::vector<std::shared_ptr<Token>>>(*tokens);
                 createEquSymbol(start, __tokens);
             }
-
+            tokens->clear();
             std::cout << "Usao ovde 1\n";
             //preskaci za sata
         }
@@ -321,6 +322,19 @@ void Assembler::assembly()
     }
     else
     {
+        for (auto sec : *sections)
+        {
+            for (auto &pendingSym : *(sec->pendingRelocations))
+            {
+                if (pendingSym.second->defined == 1 || (pendingSym.second->defined == 2 && pendingSym.second->getSection() == -1))
+                {
+                    if (pendingSym.second->getSection() == -1)
+                        pendingSym.second->setSection(0);
+                    sec->addRelocation(pendingSym.first->getOffset(), pendingSym.first->getType(), *(pendingSym.first->getValue()));
+                }
+                std::cout << "Pending rel " << *(pendingSym.first->getValue()) << " for " << *(pendingSym.second);
+            }
+        }
         backPatch();
         SymTable::instance().print();
         print();
@@ -357,7 +371,7 @@ void Assembler::backPatch()
         {
             if (forw.rel)
             {
-                int number = forw.section->code->at(forw.patch) | forw.section->code->at(forw.patch + 1) << 8;
+                short int number = forw.section->code->at(forw.patch) | forw.section->code->at(forw.patch + 1) << 8;
                 number += sym.second->getOffset();
                 forw.section->code->at(forw.patch) = number & 0xff;
                 forw.section->code->at(forw.patch + 1) = number >> 8;
@@ -386,6 +400,8 @@ bool Assembler::createEquSymbol(std::string name, std::shared_ptr<std::vector<st
         }
     }
     std::shared_ptr<Symbol> exprSymbol;
+
+    std::map<int, int> symSection;
 
     std::string sign = "+";
     for (auto token : *__tokens)
@@ -423,10 +439,18 @@ bool Assembler::createEquSymbol(std::string name, std::shared_ptr<std::vector<st
                     if (sign == "+")
                     {
                         value += exprSymbol->getOffset();
+                        symSection[exprSymbol->getSection()] += 1;
                     }
                     else
                     {
                         value -= exprSymbol->getOffset();
+                        if (exprSymbol->getSection() == 0)
+                        {
+                            symSection[exprSymbol->getSection()] += 1;
+                        }
+                        else
+                            symSection[exprSymbol->getSection()] -= 1;
+                        std::cout << "uvecano za sekciju " << exprSymbol->getSection() << std::endl;
                     }
                 }
                 else
@@ -437,6 +461,53 @@ bool Assembler::createEquSymbol(std::string name, std::shared_ptr<std::vector<st
             }
         }
     }
+    bool oneSection = false, error = false;
+    int sectionToSet = 0;
+    for (auto section : symSection)
+    {
+        if (section.second == 1)
+        {
+            if (oneSection)
+            {
+                error = true;
+                break;
+            }
+            else
+            {
+                oneSection = true;
+                sectionToSet = section.first;
+            }
+        }
+        else if (section.second != 0)
+        {
+            error = true;
+            break;
+        }
+    }
+
+    if (error)
+    {
+        std::cout << "Simbol " << sym->getName() << " nije dobro definisan!\n";
+        return false;
+    }
+    if (sectionToSet == 0)
+    {
+        sym->setSection(-1);
+    }
+    else
+    {
+        sym->setSection(sectionToSet);
+    }
+
+    if (sectionToSet == 0)
+    {
+        sym->setDefined(1);
+    }
+    else
+    {
+        sym->setDefined();
+    }
+
     std::cout << value << std::endl;
     sym->setOffset(value);
 

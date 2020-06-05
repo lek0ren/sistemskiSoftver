@@ -21,7 +21,7 @@ protected:
     bool local;
     std::string name;
     int section;
-    bool defined;
+    int defined;
     bool apsRelocatable = false;
     std::shared_ptr<std::vector<ST_forwardref>> flink;
 
@@ -36,6 +36,8 @@ public:
     void setNumber(int num);
 
     void setDefined();
+
+    void setDefined(int i);
 
     void setOffset(int off);
 

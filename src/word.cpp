@@ -42,20 +42,29 @@ Word::Word(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>
                     if (sym->getLocal())
                     {
 
-                        currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getSection());
                         if (!sym->getDefined())
                         {
-                            sym->addPatch(symPosition, false, false);
+                            currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16, sym->getSection());
+                            sym->addPatch(symPosition, false, true);
+                        }
+                        else
+                        {
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getSection());
                         }
                         opCode.at(2 * i) = sym->getOffset() & 0xFF;
                         opCode.at(2 * i + 1) = sym->getOffset() >> 8;
                     }
                     else
                     {
-                        currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getNumber());
+
                         if (!sym->getDefined())
                         {
-                            sym->addPatch(symPosition, false, false);
+                            currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16, sym->getNumber());
+                            sym->addPatch(symPosition, false, true);
+                        }
+                        else
+                        {
+                            currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getNumber());
                         }
                         opCode.at(2 * i) = sym->getOffset() & 0xFF;
                         opCode.at(2 * i + 1) = sym->getOffset() >> 8;

@@ -37,19 +37,28 @@ Byte::Byte(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>
                     if (sym->getLocal())
                     {
 
-                        currSection->addRelocation(symPosition, Relocation::Type::R_8, sym->getSection());
                         if (!sym->getDefined())
                         {
+                            currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_8, sym->getSection());
                             sym->addPatch(symPosition, false, false);
+                        }
+                        else
+                        {
+                            currSection->addRelocation(symPosition, Relocation::Type::R_8, sym->getSection());
                         }
                         opCode.at(i) = sym->getOffset() & 0xFF;
                     }
                     else
                     {
-                        currSection->addRelocation(symPosition, Relocation::Type::R_8, sym->getNumber());
+
                         if (!sym->getDefined())
                         {
+                            currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_8, sym->getNumber());
                             sym->addPatch(symPosition, false, false);
+                        }
+                        else
+                        {
+                            currSection->addRelocation(symPosition, Relocation::Type::R_8, sym->getNumber());
                         }
                         opCode.at(i) = sym->getOffset() & 0xFF;
                     }

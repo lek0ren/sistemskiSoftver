@@ -11,10 +11,9 @@ push $5
 pop simbol
 push 1000(%r6)
 jmp *a(%pc)
-add $2, a
-add $2, c
+add 2 , a
 jmp *c(%r7)
-.equ ra, a + 2 - c
+.equ ra, a + c - simbol 
 call *labela
 c: .byte 2
 simbol: .word 9

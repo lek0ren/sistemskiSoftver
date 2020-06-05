@@ -1,6 +1,7 @@
 #include "../h/symTable.h"
 #include "../h/section.h"
 #include "../h/assembler.h"
+#include "../h/symbol.h"
 #include <iostream>
 
 int SymTable::zero = 0;
@@ -33,6 +34,29 @@ SymTable &SymTable::instance()
 
 void SymTable::print()
 {
+    std::vector<std::shared_ptr<Symbol>> symbolsToPrint;
+    for (auto s : *symbols)
+    {
+        symbolsToPrint.push_back(s.second);
+    }
+
+    std::sort(symbolsToPrint.begin(), symbolsToPrint.end(), [](std::shared_ptr<Symbol> &a, const std::shared_ptr<Symbol> &b) -> bool {
+        if (std::dynamic_pointer_cast<Section>(a) == std::dynamic_pointer_cast<Section>(b))
+        {
+            if (a->getSection() == b->getSection())
+                return a->getOffset() < b->getOffset();
+            else
+            {
+                return a->getSection() < b->getSection();
+            }
+        }
+        if (std::dynamic_pointer_cast<Section>(a))
+        {
+            return true;
+        }
+        return false;
+    });
+
     std::cout << "Tabela Simbola" << std::endl;
     std::cout << "Name"
               << "\t|"
@@ -47,9 +71,9 @@ void SymTable::print()
               << "Defined" << std::endl;
 
     std::cout << "================================================" << std::endl;
-    for (auto symbol : *symbols)
+    for (auto symbol : symbolsToPrint)
     {
-        std::cout << *symbol.second << std::endl;
+        std::cout << *symbol << std::endl;
         std::cout << "================================================" << std::endl;
     }
 

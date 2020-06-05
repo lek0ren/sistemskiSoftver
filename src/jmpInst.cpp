@@ -29,23 +29,33 @@ JmpInst::JmpInst(std::string name, std::shared_ptr<std::vector<std::shared_ptr<T
                 {
                     if ((*operands)[0].getType() == Operand::Type::JMP_PC_RELATIVE)
                     {
+                        std::cout << "Created pc rel relocation for " << (*operands)[0].getName() << std::endl;
                         if (sym->getLocal())
                         {
 
-                            currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getSection());
                             if (!sym->getDefined())
                             {
                                 sym->addPatch(symPosition, true);
+                                currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16_PC, sym->getSection());
+                                std::cout << "Created pc rel pending relocation for " << (*operands)[0].getName() << std::endl;
+                            }
+                            else
+                            {
+                                currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getSection());
                             }
                             opCode.at(3) = (sym->getOffset() - 2) >> 8;
                             opCode.at(2) = (sym->getOffset() - 2) & 0xFF;
                         }
                         else
                         {
-                            currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getNumber());
                             if (!sym->getDefined())
                             {
                                 sym->addPatch(symPosition, true);
+                                currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16_PC, sym->getNumber());
+                            }
+                            else
+                            {
+                                currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getNumber());
                             }
                             opCode.at(3) = (sym->getOffset() - 2) >> 8;
                             opCode.at(2) = (sym->getOffset() - 2) & 0xFF;
@@ -53,17 +63,28 @@ JmpInst::JmpInst(std::string name, std::shared_ptr<std::vector<std::shared_ptr<T
                     }
                     else
                     {
-                        if (sym->getLocal())
+                        if (!sym->getDefined())
                         {
-                            currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getSection());
+                            if (sym->getLocal())
+                            {
+                                currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16, sym->getSection());
+                            }
+                            else
+                            {
+                                currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16, sym->getNumber());
+                            }
+                            sym->addPatch(symPosition);
                         }
                         else
                         {
-                            currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getNumber());
-                        }
-                        if (!sym->getDefined())
-                        {
-                            sym->addPatch(symPosition);
+                            if (sym->getLocal())
+                            {
+                                currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getSection());
+                            }
+                            else
+                            {
+                                currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getNumber());
+                            }
                         }
                         opCode.at(3) = sym->getOffset() >> 8;
                         opCode.at(2) = sym->getOffset() & 0xFF;
