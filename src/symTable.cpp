@@ -3,6 +3,7 @@
 #include "../h/assembler.h"
 #include "../h/symbol.h"
 #include <iostream>
+#include <iomanip>
 
 int SymTable::zero = 0;
 
@@ -95,6 +96,72 @@ void SymTable::print()
                 std::cout << *rel << std::endl;
             }
             std::cout << std::endl;
+        }
+    }
+}
+
+void SymTable::printToFile(std::ofstream &outputfile)
+{
+    std::vector<std::shared_ptr<Symbol>> symbolsToPrint;
+    for (auto s : *symbols)
+    {
+        symbolsToPrint.push_back(s.second);
+    }
+
+    std::sort(symbolsToPrint.begin(), symbolsToPrint.end(), [](std::shared_ptr<Symbol> &a, const std::shared_ptr<Symbol> &b) -> bool {
+        if (std::dynamic_pointer_cast<Section>(a) == std::dynamic_pointer_cast<Section>(b))
+        {
+            if (a->getSection() == b->getSection())
+                return a->getOffset() < b->getOffset();
+            else
+            {
+                return a->getSection() < b->getSection();
+            }
+        }
+        if (std::dynamic_pointer_cast<Section>(a))
+        {
+            return true;
+        }
+        return false;
+    });
+
+    outputfile << "Tabela Simbola" << std::endl;
+    outputfile << std::left << std::setw(20) << std::setfill(' ') << "Name"
+               << "Sect."
+               << "\t|"
+               << "Value"
+               << "\t|"
+               << "Visib."
+               << "\t|"
+               << "Serial"
+               << "\t|"
+               << "Defined" << std::endl;
+
+    outputfile << "================================================" << std::endl;
+    for (auto symbol : symbolsToPrint)
+    {
+        outputfile << *symbol << std::endl;
+        outputfile << "================================================" << std::endl;
+    }
+
+    outputfile << std::endl
+               << std::endl;
+
+    for (auto symbol : *symbols)
+    {
+        std::shared_ptr<Section> section = std::dynamic_pointer_cast<Section>(symbol.second);
+        if (section)
+        {
+            outputfile << ".rel." << symbol.second->getName() << std::endl;
+            outputfile << "offset\t|      "
+                       << "Type\t| "
+                       << "value\t|  " << std::endl;
+            outputfile << "================================================" << std::endl;
+            for (auto rel : *(section->getRelTable()))
+            {
+                outputfile << *rel << std::endl;
+            }
+            outputfile << std::endl;
         }
     }
 }

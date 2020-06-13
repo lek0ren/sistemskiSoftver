@@ -57,8 +57,8 @@ JmpInst::JmpInst(std::string name, std::shared_ptr<std::vector<std::shared_ptr<T
                             {
                                 currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getNumber());
                             }
-                            opCode.at(3) = (sym->getOffset() - 2) >> 8;
-                            opCode.at(2) = (sym->getOffset() - 2) & 0xFF;
+                            opCode.at(3) = (-2) >> 8;
+                            opCode.at(2) = (-2) & 0xFF;
                         }
                     }
                     else

@@ -55,8 +55,8 @@ OneOp::OneOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token
                         {
                             currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getNumber());
                         }
-                        opCode.at(3) = sym->getOffset() >> 8;
-                        opCode.at(2) = sym->getOffset() & 0xFF;
+                        opCode.at(3) = (-2) >> 8;
+                        opCode.at(2) = (-2) & 0xFF;
                     }
                 }
                 else
@@ -81,7 +81,7 @@ OneOp::OneOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token
                         if (!sym->getDefined())
                         {
                             currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16, sym->getNumber());
-                            sym->addPatch(symPosition);
+                            //sym->addPatch(symPosition);
                         }
                         else
                         {

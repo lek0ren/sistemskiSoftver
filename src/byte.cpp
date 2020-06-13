@@ -54,13 +54,13 @@ Byte::Byte(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token>>
                         if (!sym->getDefined())
                         {
                             currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_8, sym->getNumber());
-                            sym->addPatch(symPosition, false, false);
+                            //sym->addPatch(symPosition, false, false);
                         }
                         else
                         {
                             currSection->addRelocation(symPosition, Relocation::Type::R_8, sym->getNumber());
                         }
-                        opCode.at(i) = sym->getOffset() & 0xFF;
+                        opCode.at(i) = 0 & 0xFF;
                     }
                 }
                 else

@@ -7,11 +7,11 @@
 std::ostream &operator<<(std::ostream &output, const Symbol &s)
 {
     output << std::dec;
-    output << s.getName() << "\t|  " << s.section << "\t|  " << s.offset << "\t|  " << (s.local ? "l" : "g") << "\t|  " << s.num << "\t|  " << s.defined << "\t|  ";
-    for (auto f : *(s.flink))
+    output << std::left << std::setw(20) << std::setfill(' ') << s.getName() << (s.section < 0 ? 0 : s.section) << "\t|  " << s.offset << "\t|  " << (s.local ? "l" : "g") << "\t|  " << s.num << "\t|  " << s.defined << "\t|  ";
+    /* for (auto f : *(s.flink))
     {
         output << f.patch << " ";
-    }
+    }*/
     output << std::endl;
     return output;
 }

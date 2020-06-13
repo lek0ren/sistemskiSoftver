@@ -67,8 +67,8 @@ TwoOp::TwoOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token
                             {
                                 currSection->addRelocation(symPosition, Relocation::Type::R_16_PC, sym->getNumber());
                             }
-                            opCode.at(firstOperandOffset + 3) = (sym->getOffset() - toRemove) >> 8;
-                            opCode.at(firstOperandOffset + 2) = (sym->getOffset() - toRemove) & 0xFF;
+                            opCode.at(firstOperandOffset + 3) = (-toRemove) >> 8;
+                            opCode.at(firstOperandOffset + 2) = (-toRemove) & 0xFF;
                         }
                     }
                     else
@@ -94,14 +94,14 @@ TwoOp::TwoOp(std::string name, std::shared_ptr<std::vector<std::shared_ptr<Token
                             if (!sym->getDefined())
                             {
                                 currSection->addPendingRelocation(sym, symPosition, Relocation::Type::R_16, sym->getNumber());
-                                sym->addPatch(symPosition);
+                                //sym->addPatch(symPosition);
                             }
                             else
                             {
                                 currSection->addRelocation(symPosition, Relocation::Type::R_16, sym->getNumber());
                             }
-                            opCode.at(firstOperandOffset + 3) = sym->getOffset() >> 8;
-                            opCode.at(firstOperandOffset + 2) = sym->getOffset() & 0xFF;
+                            opCode.at(firstOperandOffset + 3) = 0 >> 8;
+                            opCode.at(firstOperandOffset + 2) = 0 & 0xFF;
                         }
                     }
                 }

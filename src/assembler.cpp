@@ -328,9 +328,13 @@ void Assembler::assembly()
             {
                 if (pendingSym.second->defined == 1 || (pendingSym.second->defined == 2 && pendingSym.second->getSection() == -1))
                 {
-                    if (pendingSym.second->getSection() == -1)
-                        pendingSym.second->setSection(0);
-                    sec->addRelocation(pendingSym.first->getOffset(), pendingSym.first->getType(), *(pendingSym.first->getValue()));
+
+                    if (!(pendingSym.second->getApsRelocatable() && pendingSym.second->getSection() == -1))
+                    {
+                        if (pendingSym.second->getSection() == -1)
+                            pendingSym.second->setSection(0);
+                        sec->addRelocation(pendingSym.first->getOffset(), pendingSym.first->getType(), *(pendingSym.first->getValue()));
+                    }
                 }
                 std::cout << "Pending rel " << *(pendingSym.first->getValue()) << " for " << *(pendingSym.second);
             }
@@ -338,6 +342,7 @@ void Assembler::assembly()
         backPatch();
         SymTable::instance().print();
         print();
+        printToFile();
     }
 }
 
@@ -399,9 +404,13 @@ bool Assembler::createEquSymbol(std::string name, std::shared_ptr<std::vector<st
             //ispisi gresku
         }
     }
+
+    std::cout << "********* " << *sym << std::endl;
     std::shared_ptr<Symbol> exprSymbol;
 
     std::map<int, int> symSection;
+
+    bool globalExp = false;
 
     std::string sign = "+";
     for (auto token : *__tokens)
@@ -427,10 +436,17 @@ bool Assembler::createEquSymbol(std::string name, std::shared_ptr<std::vector<st
             }
             else if (std::regex_match(tok, m, reg_symbol_dir))
             {
-
                 exprSymbol = SymTable::instance().getSymbol(tok);
                 if (exprSymbol)
                 {
+                    if (!exprSymbol->getLocal() && exprSymbol->getSection() == 0 && !globalExp)
+                    {
+                        globalExp = true;
+                    }
+                    else
+                    {
+                        globalExp = false;
+                    }
                     if (!exprSymbol->getDefined())
                     {
                         TableOfUnSym::instance().addSymbol(sym, __tokens);
@@ -460,6 +476,10 @@ bool Assembler::createEquSymbol(std::string name, std::shared_ptr<std::vector<st
                 }
             }
         }
+    }
+    if (!globalExp)
+    {
+        sym->setApsRelocatable();
     }
     bool oneSection = false, error = false;
     int sectionToSet = 0;
@@ -512,4 +532,18 @@ bool Assembler::createEquSymbol(std::string name, std::shared_ptr<std::vector<st
     sym->setOffset(value);
 
     return true;
+}
+
+void Assembler::printToFile()
+{
+    SymTable::instance().printToFile(outfile);
+    outfile << std::endl
+            << std::endl
+            << "Sections" << std::endl;
+    for (auto section : *sections)
+    {
+        outfile << *section;
+        outfile << std::endl;
+    }
+    outfile << std::endl;
 }

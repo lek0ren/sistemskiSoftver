@@ -56,6 +56,8 @@ public:
 
     void backPatch();
 
+    void printToFile();
+
     std::shared_ptr<Section> getCurrentSection();
 
     int zero = 0;
